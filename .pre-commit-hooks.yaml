@@ -1,0 +1,6 @@
+- id: fix-smartquotes
+  name: Fix smartquote characters
+  description: 'Replace "smartquote" characters with regular quotes'
+  entry: fix-smartquotes
+  language: python
+  types: [text]
