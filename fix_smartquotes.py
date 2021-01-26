@@ -22,6 +22,7 @@ In files with the offending marks, they are replaced and the run is marked as
 failed. This makes the script suitable as a pre-commit fixer.
 """
 import argparse
+import collections
 import glob
 import re
 import sys
@@ -66,6 +67,31 @@ DEFAULT_SINGLE_QUOTE_CODEPOINTS = (
 )
 
 
+class DiffRecorder:
+    def __init__(self):
+        # in py3.6+ the dict builtin maintains order, but being explicit is
+        # slightly safer since we're being explicit about the fact that we want
+        # to retain key order
+        self.by_fname = collections.OrderedDict()
+
+    def add(self, fname, original, updated, lineno):
+        if fname not in self.by_fname:
+            self.by_fname[fname] = []
+        self.by_fname[fname].append((original, updated, lineno))
+
+    def hasdiff(self, fname):
+        return bool(self.by_fname.get(fname))
+
+    def changed_filenames(self):
+        return list(self.by_name.keys())
+
+    def __bool__(self):
+        return bool(self.by_fname)
+
+    def items(self):
+        return self.by_fname.items()
+
+
 def all_filenames(files):
     if not files:
         for fn in glob.iglob("**/*", recursive=True):
@@ -77,39 +103,65 @@ def all_filenames(files):
             yield fn
 
 
-def do_replacements(filename, single_quote_regex, double_quote_regex):
+def do_replacements(
+    recorder: DiffRecorder, filename, single_quote_regex, double_quote_regex
+):
     """Given a filename, replace content and write *if* changes were made
 
     Returns True if changes were made, False if none were made"""
     with open(filename, "r") as f:
-        original = content = f.read()
+        content = f.readlines()
 
-    content = double_quote_regex.sub('"', content)
-    content = single_quote_regex.sub("'", content)
+    newcontent = []
+    for lineno, line in enumerate(content, 1):
+        updated = single_quote_regex.sub("'", double_quote_regex.sub('"', line))
+        newcontent.append(updated)
+        if updated != line:
+            recorder.add(filename, line, updated, lineno)
 
-    changed = content != original
-
-    if changed:
+    if recorder.hasdiff(filename):
         with open(filename, "w") as f:
-            f.write(content)
+            f.write("".join(newcontent))
+        return True
+    return False
 
-    return changed
 
-
-def do_all_replacements(files, single_quote_regex, double_quote_regex):
+def do_all_replacements(files, single_quote_regex, double_quote_regex) -> DiffRecorder:
     """Do replacements over a set of filenames, and return a list of filenames
     where changes were made."""
-    changes_made = []
+    recorder = DiffRecorder()
     for fn in all_filenames(files):
-        if do_replacements(fn, single_quote_regex, double_quote_regex):
-            changes_made.append(fn)
-    return changes_made
+        do_replacements(recorder, fn, single_quote_regex, double_quote_regex)
+    return recorder
 
 
-def print_changed_filenames(filenames):
+def _gen_change_caret_line(original, updated):
+    indices = []
+    for idx, c in enumerate(original):
+        if c != updated[idx]:
+            indices.append(idx)
+    gen = ""
+    cur = 0
+    for idx in indices:
+        gen += " " * (idx - cur)
+        gen += "^"
+        cur = idx + 1
+    return gen
+
+
+def print_changes(args, recorder: DiffRecorder):
     print("Changes were made in these files:")
-    for filename in filenames:
-        print("  \033[0;33m" + filename + "\033[0m")
+    for filename, changeset in recorder.items():
+        print(f"  \033[0;33m{filename}\033[0m")
+        if args.show_changes:
+            for (original, updated, lineno) in changeset:
+                original, updated = original.rstrip(), updated.rstrip()
+                print(f"  line {lineno}:")
+                print(f"  \033[0;91m-{original}\033[0m")
+                print(f"  \033[0;92m+{updated}\033[0m")
+                print(
+                    f"  \033[1;96m {_gen_change_caret_line(original, updated)}\033[0m"
+                )
 
 
 def parse_args():
@@ -139,6 +191,13 @@ def parse_args():
             f"default: {','.join(DEFAULT_SINGLE_QUOTE_CODEPOINTS)}"
         ),
     )
+    parser.add_argument(
+        "--show-changes",
+        action="store_true",
+        default=False,
+        help="Show the lines which were changed",
+    )
+
     args = parser.parse_args()
 
     # convert comma delimited lists manually
@@ -159,11 +218,11 @@ def main():
     double_quote_regex = codepoints2regex(args.double_quote_codepoints)
     single_quote_regex = codepoints2regex(args.single_quote_codepoints)
 
-    changed_filenames = do_all_replacements(
+    changes = do_all_replacements(
         all_filenames(args.files), single_quote_regex, double_quote_regex
     )
-    if changed_filenames:
-        print_changed_filenames(changed_filenames)
+    if changes:
+        print_changes(args, changes)
         sys.exit(1)
 
 
