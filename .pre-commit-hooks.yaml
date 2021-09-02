@@ -1,0 +1,6 @@
+- id: fix-ligatures
+  name: Fix ligature characters with NFKD normalization
+  description: 'Replace ligature characters with normalized individual characters'
+  entry: fix-ligatures
+  language: python
+  types: [text]
