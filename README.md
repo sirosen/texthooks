@@ -1,7 +1,39 @@
-# fix-smartquotes
+# texthooks
 
-A pre-commit hook for automatically finding and replacing smartquote
-characters with the standard ascii `"` and `'` characters.
+A collection of `pre-commit` hooks for handling text files.
+
+In particular, hooks for handling unicode characters which may be undesirable
+in a repository.
+
+## Usage with pre-commit
+
+To use with `pre-commit`, include this repo and the desired hooks in
+`.pre-commit-config.yaml`:
+
+```yaml
+- repo: https://github.com/sirosen/texthooks
+  rev: 0.1.0
+  hooks:
+    - id: fix-smartquotes
+```
+
+## Standalone Usage
+
+Each hook is usable as a CLI script. Simply
+
+```bash
+pip install texthooks
+```
+
+and then invoke, e.g.
+
+```bash
+fix-smartquotes FILENAME
+```
+
+## Supported Hooks
+
+### `fix-smartquotes`
 
 This fixes copy-paste from some applications which replace double-quotes with curly
 quotes.
@@ -17,20 +49,7 @@ ignored.
 In files with the offending marks, they are replaced and the run is marked as
 failed.
 
-## Supported Hooks
-
-Only one hook is provided, `fix-smartquotes`.
-
-Use it in `.pre-commit-config.yaml` like so:
-
-```yaml
-- repo: https://github.com/sirosen/fix-smartquotes
-  rev: 0.1.1
-  hooks:
-    - id: fix-smartquotes
-```
-
-## Overriding Quotation Characters
+#### Overriding Quotation Characters
 
 Two options are available for specifying exactly which characters will be
 replaced. For ease of use, they are specified as hex-encoded unicode
@@ -42,22 +61,12 @@ ornament" (`275B`) characters. You could override the single quote codepoints
 as follows:
 
 ```yaml
-- repo: https://github.com/sirosen/fix-smartquotes
-  rev: 0.1.1
+- repo: https://github.com/sirosen/texthooks
+  rev: 0.1.0
   hooks:
     - id: fix-smartquotes
       # replace default single quote chars with this set:
       # apostrophe, fullwidth apostrophe, left single quote, single high
       # reversed-9 quote, right single quote
       args: ["--single-quote-codepoints", "0027,FF07,2018,201B,2019"]
-```
-
-## Standalone Usage
-
-You can also `pip install fix-smartquotes` to run the tool manually.
-
-For full usage info:
-
-```bash
-fix-smartquotes --help
 ```
