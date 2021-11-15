@@ -15,6 +15,7 @@ To use with `pre-commit`, include this repo and the desired hooks in
   rev: 0.1.0
   hooks:
     - id: fix-smartquotes
+    - id: fix-ligatures
 ```
 
 ## Standalone Usage
@@ -70,3 +71,14 @@ as follows:
       # reversed-9 quote, right single quote
       args: ["--single-quote-codepoints", "0027,FF07,2018,201B,2019"]
 ```
+
+### fix-ligatures
+
+Automatically find and replace ligature characters with their ascii equivalents.
+
+This replaces liguatures which may be created by programs like LaTeX for
+presentation with their strictly-equivalent ASCII counterparts. For example,
+`fi` and `ff` may be ligature-ized.
+
+This hook converts these back into ASCII so that tools like `grep` will behave
+as expected.
