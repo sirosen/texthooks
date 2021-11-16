@@ -33,11 +33,12 @@ def runner(tmp_path, capsys):
         *,
         add_args: t.Optional[t.List[str]] = None,
         filename: str = "file.txt",
+        encoding: str = "utf-8",
     ):
         if not add_args:
             add_args = []
         newfile = tmp_path / filename
-        newfile.write_text(data)
+        newfile.write_text(data, encoding=encoding)
 
         result = _CLIResult(newfile)
         result.exit_code = fixer_main(argv=[str(newfile)] + add_args)
