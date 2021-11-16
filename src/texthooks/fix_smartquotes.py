@@ -121,7 +121,7 @@ def main(*, argv=sys.argv):
         all_filenames(args.files), single_quote_regex, double_quote_regex
     )
     if changes:
-        changes.print_changes(args.show_changes)
+        changes.print_changes(args.show_changes, args.color)
         return 1
     return 0
 

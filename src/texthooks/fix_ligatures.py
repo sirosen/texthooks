@@ -33,6 +33,10 @@ def _re_subfunc(match):
     return CHAR_MAP.get(x, x)
 
 
+def charwidth(c: str) -> int:
+    return len(CHAR_MAP.get(c, c))
+
+
 def replace_ligatures_str(s: str) -> str:
     return REPLACEMENT_PATTERN.sub(_re_subfunc, s)
 
@@ -56,7 +60,7 @@ def main(*, argv=sys.argv) -> int:
     args = parse_args(argv)
     changes = do_all_replacements(all_filenames(args.files))
     if changes:
-        changes.print_changes(args.show_changes)
+        changes.print_changes(args.show_changes, args.color, charwidth=charwidth)
         return 1
     return 0
 

@@ -1,3 +1,5 @@
+import pytest
+
 from texthooks.fix_ligatures import parse_args as fix_ligatures_parse_args
 from texthooks.fix_smartquotes import (
     DEFAULT_DOUBLE_QUOTE_CODEPOINTS,
@@ -44,3 +46,13 @@ def test_fix_smartquotes_arg_parsing():
     assert args4.show_changes is False
     assert args2.double_quote_codepoints == DEFAULT_DOUBLE_QUOTE_CODEPOINTS
     assert list(args4.single_quote_codepoints) == ["FF07", "201B"]
+
+
+@pytest.mark.parametrize(
+    "parse_func", [fix_ligatures_parse_args, fix_smartquotes_parse_args]
+)
+def test_invalid_color_opt(parse_func):
+    with pytest.raises(SystemExit) as excinfo:
+        parse_func(argv=["foo", "--color", "bar"])
+    err = excinfo.value
+    assert err.code == 2

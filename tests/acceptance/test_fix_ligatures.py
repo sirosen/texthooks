@@ -21,3 +21,31 @@ conﬁg
 config
 """
     )
+
+
+def test_fix_ligature_showchanges_nocolor(runner):
+    result = runner(
+        fix_ligatures_main,
+        """
+conﬁg conﬁg
+""",
+        add_args=["--show-changes", "--color=off"],
+    )
+    assert result.exit_code == 1
+    assert (
+        result.file_data
+        == """
+config config
+"""
+    )
+    assert (
+        result.stdout
+        == f"""\
+Changes were made in these files:
+  {result.filename}
+  line 2:
+    -conﬁg conﬁg
+    +config config
+        ^      ^
+"""
+    )
