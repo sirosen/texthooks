@@ -82,3 +82,14 @@ presentation with their strictly-equivalent ASCII counterparts. For example,
 
 This hook converts these back into ASCII so that tools like `grep` will behave
 as expected.
+
+## CHANGELOG
+
+### Unreleased
+
+- Adjust encoding for output to be UTF-8 when stdout is detected to be
+  unencoded
+
+### 0.1.0
+
+- Initial release with `fix-ligatures` and `fix-smartquotes` hooks

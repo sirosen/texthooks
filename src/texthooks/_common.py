@@ -2,9 +2,12 @@
 # common tools/utilities
 #
 import argparse
+import codecs
 import collections
 import glob
+import io
 import re
+import sys
 import typing as t
 
 import identify
@@ -22,6 +25,26 @@ _ANSI_RESET = f"{_ANSI_ESCAPE}[0m"
 
 def strip_ansi(s: str):
     return _ANSI_RE.sub("", s)
+
+
+def get_stream_encoding(stream: t.IO) -> str:
+    return getattr(stream, "encoding", None) or sys.getdefaultencoding()
+
+
+def get_encoded_stream(stream: t.IO) -> t.IO:
+    enc = get_stream_encoding(stream)
+    try:
+        is_ascii = codecs.lookup(enc).name == "ascii"
+    except LookupError:
+        is_ascii = False
+
+    buf = getattr(stream, "buffer", None)
+
+    if is_ascii and buf is not None:
+        # use errors="replace" to guarantee we get something that works
+        return io.TextIOWrapper(buf, encoding="utf-8", errors="replace")
+    else:
+        return stream
 
 
 def colorize(s: str, *, color: str, bold: bool = False):
@@ -121,13 +144,14 @@ class DiffRecorder:
         *,
         charwidth: t.Optional[t.Callable[[str], int]] = None,
     ) -> None:
-        print("Changes were made in these files:")
+        stream = get_encoded_stream(sys.stdout)
+        stream.write("Changes were made in these files:\n")
         for filename, changeset in self.items():
             if ansi_colors:
                 filename_c = colorize(filename, color="yellow")
             else:
                 filename_c = filename
-            print(f"  {filename_c}")
+            stream.write(f"  {filename_c}\n")
             if show_changes:
                 for (original, updated, lineno) in changeset:
                     original = "-" + original.rstrip()
@@ -140,10 +164,10 @@ class DiffRecorder:
                         original = colorize(original, color="bright_red")
                         updated = colorize(updated, color="bright_green")
                         caret_line = colorize(caret_line, color="bright_cyan")
-                    print(f"  line {lineno}:")
-                    print(f"    {original}")
-                    print(f"    {updated}")
-                    print(f"    {caret_line}")
+                    stream.write(f"  line {lineno}:\n")
+                    stream.write(f"    {original}\n")
+                    stream.write(f"    {updated}\n")
+                    stream.write(f"    {caret_line}\n")
 
 
 class ColorParseAction(argparse.Action):
