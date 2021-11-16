@@ -2,7 +2,7 @@ PKG_VERSION=$(shell grep '^version' setup.cfg | cut -d '=' -f2 | tr -d ' ')
 
 .PHONY: lint test release showvars
 lint:
-	tox -e lint
+	tox -e lint,mypy
 test:
 	tox
 showvars:
