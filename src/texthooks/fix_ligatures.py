@@ -47,18 +47,19 @@ def do_all_replacements(files) -> DiffRecorder:
     return recorder
 
 
-def parse_args():
+def parse_args(argv):
     parser = standard_cli_parser(__doc__)
-    return parser.parse_args()
+    return parser.parse_args(argv)
 
 
-def main():
-    args = parse_args()
+def main(*, argv=sys.argv) -> int:
+    args = parse_args(argv)
     changes = do_all_replacements(all_filenames(args.files))
     if changes:
         changes.print_changes(args.show_changes)
-        sys.exit(1)
+        return 1
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())

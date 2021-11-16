@@ -15,3 +15,5 @@ release:
 .PHONY: clean
 clean:
 	rm -rf dist build *.egg-info .tox .venv
+	find . -name '*.pyc' -delete
+	find . -name "__pycache__" -type d -exec rm -rf '{}' +

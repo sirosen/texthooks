@@ -77,7 +77,7 @@ def do_all_replacements(files, single_quote_regex, double_quote_regex) -> DiffRe
     return recorder
 
 
-def parse_args():
+def parse_args(argv):
     parser = standard_cli_parser(__doc__)
     parser.add_argument(
         "--double-quote-codepoints",
@@ -97,7 +97,7 @@ def parse_args():
             f"default: {','.join(DEFAULT_SINGLE_QUOTE_CODEPOINTS)}"
         ),
     )
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     # convert comma delimited lists manually
     if args.double_quote_codepoints:
@@ -111,8 +111,8 @@ def parse_args():
     return args
 
 
-def main():
-    args = parse_args()
+def main(*, argv=sys.argv):
+    args = parse_args(argv)
 
     double_quote_regex = codepoints2regex(args.double_quote_codepoints)
     single_quote_regex = codepoints2regex(args.single_quote_codepoints)
@@ -122,8 +122,9 @@ def main():
     )
     if changes:
         changes.print_changes(args.show_changes)
-        sys.exit(1)
+        return 1
+    return 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
