@@ -43,7 +43,7 @@ def runner(tmp_path, capsys):
         result = _CLIResult(newfile)
         result.exit_code = fixer_main(argv=[str(newfile)] + add_args)
 
-        with open(newfile) as fp:
+        with open(newfile, encoding=encoding) as fp:
             result.file_data = fp.read()
 
         captured = capsys.readouterr()
