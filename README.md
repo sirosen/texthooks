@@ -82,3 +82,14 @@ presentation with their strictly-equivalent ASCII counterparts. For example,
 
 This hook converts these back into ASCII so that tools like `grep` will behave
 as expected.
+
+## CHANGELOG
+
+### Unreleased
+
+- Adjust the handling of file encodings. Files will be read with UTF-8 encoding
+  by default in most cases.
+
+### 0.1.0
+
+- Initial release with `fix-ligatures` and `fix-smartquotes` hooks
