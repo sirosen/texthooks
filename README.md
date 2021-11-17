@@ -96,7 +96,7 @@ value of `True`.
 
 ## CHANGELOG
 
-### Unreleased
+### 0.2.0
 
 - Add the `forbid-bidi-controls` hook
 - Adjust the handling of file encodings. Files will be read with UTF-8 encoding
