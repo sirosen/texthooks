@@ -2,9 +2,11 @@
 # common tools/utilities
 #
 import argparse
+import codecs
 import collections
 import glob
 import re
+import sys
 import typing as t
 
 import identify
@@ -98,7 +100,16 @@ class DiffRecorder:
         line-fixer function which takes lines as input and produces lines as output.
 
         Returns True if changes were made, False if none were made"""
-        with open(filename, "r") as f:
+        # determine encoding from defaults, but convert "ascii" to "utf-8"
+        encoding = sys.getfilesystemencoding() or sys.getdefaultencoding()
+        try:
+            is_ascii = codecs.lookup(encoding).name == "ascii"
+        except LookupError:
+            is_ascii = False
+        if is_ascii:
+            encoding = "utf-8"
+
+        with open(filename, "r", encoding=encoding) as f:
             content = f.readlines()
 
         newcontent = []
