@@ -96,6 +96,10 @@ value of `True`.
 
 ## CHANGELOG
 
+### 0.2.1
+
+- Fix a typo in `forbid-bidi-controls` entrypoint
+
 ### 0.2.0
 
 - Add the `forbid-bidi-controls` hook
