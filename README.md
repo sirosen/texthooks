@@ -83,10 +83,22 @@ presentation with their strictly-equivalent ASCII counterparts. For example,
 This hook converts these back into ASCII so that tools like `grep` will behave
 as expected.
 
+### forbid-bidi-controls
+
+This is checker which forbids the use of unicode bidirectional text control
+characters.
+
+These are directional formatting characters which can be used to construct text
+with unexpected or unclear semantics. For example, in programming languages
+which allow bidirectional text in statements, `True = ייִדיש` can be written
+with right-to-left reversal to mean that the variable `ייִדיש` is assigned a
+value of `True`.
+
 ## CHANGELOG
 
 ### Unreleased
 
+- Add the `forbid-bidi-controls` hook
 - Adjust the handling of file encodings. Files will be read with UTF-8 encoding
   by default in most cases.
 

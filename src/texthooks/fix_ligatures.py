@@ -12,7 +12,8 @@ text.
 import re
 import sys
 
-from ._common import DiffRecorder, all_filenames, codepoint2char, standard_cli_parser
+from ._common import all_filenames, codepoint2char, standard_cli_parser
+from ._recorders import DiffRecorder
 
 # map unicode codepoints to non-ligature versions of those chars
 CODEPOINT_MAP = {

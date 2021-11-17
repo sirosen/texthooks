@@ -2,11 +2,8 @@
 # common tools/utilities
 #
 import argparse
-import codecs
-import collections
 import glob
 import re
-import sys
 import typing as t
 
 import identify
@@ -52,111 +49,6 @@ def all_filenames(files: t.Optional[t.Iterable[str]]) -> t.Iterator[str]:
             yield fn
 
 
-def _gen_change_caret_line(
-    original, updated, charwidth: t.Optional[t.Callable[[str], int]]
-):
-    shift = 0
-    indices = []
-    for idx, c in enumerate(original):
-        if c != updated[idx + shift]:
-            indices.append(idx)
-            if charwidth is not None:
-                shift += charwidth(c) - 1
-    gen = ""
-    cur = 0
-    for idx in indices:
-        gen += " " * (idx - cur)
-        gen += "^"
-        cur = idx
-    return gen
-
-
-class DiffRecorder:
-    def __init__(self):
-        # in py3.6+ the dict builtin maintains order, but being explicit is
-        # slightly safer since we're being explicit about the fact that we want
-        # to retain key order
-        self.by_fname = collections.OrderedDict()
-
-    def add(self, fname, original, updated, lineno):
-        if fname not in self.by_fname:
-            self.by_fname[fname] = []
-        self.by_fname[fname].append((original, updated, lineno))
-
-    def hasdiff(self, fname):
-        return bool(self.by_fname.get(fname))
-
-    def changed_filenames(self):
-        return list(self.by_name.keys())
-
-    def __bool__(self):
-        return bool(self.by_fname)
-
-    def items(self):
-        return self.by_fname.items()
-
-    def run_line_fixer(self, line_fixer: t.Callable[[str], str], filename: str):
-        """Given a filename, replace content and write *if* changes were made, using a
-        line-fixer function which takes lines as input and produces lines as output.
-
-        Returns True if changes were made, False if none were made"""
-        # determine encoding from defaults, but convert "ascii" to "utf-8"
-        encoding = sys.getfilesystemencoding() or sys.getdefaultencoding()
-        try:
-            is_ascii = codecs.lookup(encoding).name == "ascii"
-        except LookupError:
-            is_ascii = False
-        if is_ascii:
-            encoding = "utf-8"
-
-        with open(filename, "r", encoding=encoding) as f:
-            content = f.readlines()
-
-        newcontent = []
-        for lineno, line in enumerate(content, 1):
-            newline = line_fixer(line)
-            newcontent.append(newline)
-            if newline != line:
-                self.add(filename, line, newline, lineno)
-
-        if self.hasdiff(filename):
-            with open(filename, "w") as f:
-                f.write("".join(newcontent))
-            return True
-        return False
-
-    def print_changes(
-        self,
-        show_changes: bool,
-        ansi_colors: bool,
-        *,
-        charwidth: t.Optional[t.Callable[[str], int]] = None,
-    ) -> None:
-        print("Changes were made in these files:")
-        for filename, changeset in self.items():
-            if ansi_colors:
-                filename_c = colorize(filename, color="yellow")
-            else:
-                filename_c = filename
-            print(f"  {filename_c}")
-            if show_changes:
-                for (original, updated, lineno) in changeset:
-                    original = "-" + original.rstrip()
-                    updated = "+" + updated.rstrip()
-                    caret_line = " " + _gen_change_caret_line(
-                        original[1:], updated[1:], charwidth
-                    )
-
-                    if ansi_colors:
-                        original = colorize(original, color="bright_red")
-                        updated = colorize(updated, color="bright_green")
-                        caret_line = colorize(caret_line, color="bright_cyan")
-                    print(f"  line {lineno}:")
-                    print(f"    {original}")
-                    print(f"    {updated}")
-                    print(f"    {caret_line}")
-
-
 class ColorParseAction(argparse.Action):
     def __init__(self, option_strings, dest, nargs=None, **kwargs):
         super().__init__(option_strings, dest, nargs=1, **kwargs)
@@ -165,7 +57,7 @@ class ColorParseAction(argparse.Action):
         setattr(namespace, self.dest, values == "on")
 
 
-def standard_cli_parser(doc):
+def standard_cli_parser(doc: str, *, fixer: bool = True):
     parser = argparse.ArgumentParser(
         description=doc, formatter_class=argparse.RawDescriptionHelpFormatter
     )
@@ -174,12 +66,13 @@ def standard_cli_parser(doc):
         nargs="*",
         help="default: all text files in current directory (recursive)",
     )
-    parser.add_argument(
-        "--show-changes",
-        action="store_true",
-        default=False,
-        help="Show the lines which were changed",
-    )
+    if fixer:
+        parser.add_argument(
+            "--show-changes",
+            action="store_true",
+            default=False,
+            help="Show the lines which were changed",
+        )
     parser.add_argument(
         "--color",
         type=str.lower,

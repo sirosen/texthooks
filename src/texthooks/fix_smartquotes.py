@@ -24,7 +24,8 @@ failed. This makes the script suitable as a pre-commit fixer.
 import re
 import sys
 
-from ._common import DiffRecorder, all_filenames, codepoints2chars, standard_cli_parser
+from ._common import all_filenames, codepoints2chars, standard_cli_parser
+from ._recorders import DiffRecorder
 
 
 def codepoints2regex(codepoints):
