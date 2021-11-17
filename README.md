@@ -96,6 +96,10 @@ value of `True`.
 
 ## CHANGELOG
 
+### 0.2.2
+
+- Fix a bug in CLI argument handling for all hooks
+
 ### 0.2.1
 
 - Fix a typo in `forbid-bidi-controls` entrypoint
