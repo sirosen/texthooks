@@ -24,7 +24,7 @@ failed. This makes the script suitable as a pre-commit fixer.
 import re
 import sys
 
-from ._common import all_filenames, codepoints2chars, standard_cli_parser
+from ._common import all_filenames, codepoints2chars, parse_cli_args
 from ._recorders import DiffRecorder
 
 
@@ -78,8 +78,7 @@ def do_all_replacements(files, single_quote_regex, double_quote_regex) -> DiffRe
     return recorder
 
 
-def parse_args(argv):
-    parser = standard_cli_parser(__doc__)
+def modify_cli_parser(parser):
     parser.add_argument(
         "--double-quote-codepoints",
         type=str,
@@ -98,8 +97,9 @@ def parse_args(argv):
             f"default: {','.join(DEFAULT_SINGLE_QUOTE_CODEPOINTS)}"
         ),
     )
-    args = parser.parse_args(argv)
 
+
+def postprocess_cli_args(args):
     # convert comma delimited lists manually
     if args.double_quote_codepoints:
         args.double_quote_codepoints = args.double_quote_codepoints.split(",")
@@ -112,7 +112,17 @@ def parse_args(argv):
     return args
 
 
-def main(*, argv=sys.argv):
+def parse_args(argv):
+    return parse_cli_args(
+        __doc__,
+        fixer=True,
+        argv=argv,
+        modify_parser=modify_cli_parser,
+        postprocess=postprocess_cli_args,
+    )
+
+
+def main(*, argv=None):
     args = parse_args(argv)
 
     double_quote_regex = codepoints2regex(args.double_quote_codepoints)

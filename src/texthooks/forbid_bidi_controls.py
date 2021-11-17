@@ -8,7 +8,7 @@ other sources
 """
 import sys
 
-from ._common import all_filenames, codepoint2char, standard_cli_parser
+from ._common import all_filenames, codepoint2char, parse_cli_args
 from ._recorders import CheckRecorder
 
 # see: http://www.unicode.org/reports/tr9/#Directional_Formatting_Characters
@@ -44,11 +44,10 @@ def do_all_checks(files) -> CheckRecorder:
 
 
 def parse_args(argv):
-    parser = standard_cli_parser(__doc__, fixer=False)
-    return parser.parse_args(argv)
+    return parse_cli_args(__doc__, fixer=False, argv=argv)
 
 
-def main(*, argv=sys.argv) -> int:
+def main(*, argv=None) -> int:
     args = parse_args(argv)
     findings = do_all_checks(all_filenames(args.files))
     if findings:

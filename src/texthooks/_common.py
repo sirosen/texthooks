@@ -4,6 +4,7 @@
 import argparse
 import glob
 import re
+import sys
 import typing as t
 
 import identify
@@ -50,14 +51,11 @@ def all_filenames(files: t.Optional[t.Iterable[str]]) -> t.Iterator[str]:
 
 
 class ColorParseAction(argparse.Action):
-    def __init__(self, option_strings, dest, nargs=None, **kwargs):
-        super().__init__(option_strings, dest, nargs=1, **kwargs)
-
     def __call__(self, parser, namespace, values, option_string=None):
         setattr(namespace, self.dest, values == "on")
 
 
-def standard_cli_parser(doc: str, *, fixer: bool = True):
+def _standard_cli_parser(doc: str, fixer: bool):
     parser = argparse.ArgumentParser(
         description=doc, formatter_class=argparse.RawDescriptionHelpFormatter
     )
@@ -76,6 +74,7 @@ def standard_cli_parser(doc: str, *, fixer: bool = True):
     parser.add_argument(
         "--color",
         type=str.lower,
+        nargs=1,
         action=ColorParseAction,
         default="on",
         # TODO: add 'auto' with tty detection
@@ -83,3 +82,24 @@ def standard_cli_parser(doc: str, *, fixer: bool = True):
         help="Enable or disable ANSI colors. Defaults to 'on'",
     )
     return parser
+
+
+def parse_cli_args(
+    doc: str,
+    *,
+    fixer: bool,
+    argv=None,
+    modify_parser: t.Optional[t.Callable] = None,
+    postprocess: t.Optional[t.Callable] = None,
+):
+    parser = _standard_cli_parser(__doc__, fixer)
+    if modify_parser:
+        modify_parser(parser)
+
+    if argv is None:
+        argv = sys.argv[1:]
+    args = parser.parse_args(argv)
+
+    if postprocess:
+        args = postprocess(args)
+    return args

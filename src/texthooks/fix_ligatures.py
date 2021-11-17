@@ -12,7 +12,7 @@ text.
 import re
 import sys
 
-from ._common import all_filenames, codepoint2char, standard_cli_parser
+from ._common import all_filenames, codepoint2char, parse_cli_args
 from ._recorders import DiffRecorder
 
 # map unicode codepoints to non-ligature versions of those chars
@@ -53,11 +53,10 @@ def do_all_replacements(files) -> DiffRecorder:
 
 
 def parse_args(argv):
-    parser = standard_cli_parser(__doc__)
-    return parser.parse_args(argv)
+    return parse_cli_args(__doc__, argv=argv, fixer=True)
 
 
-def main(*, argv=sys.argv) -> int:
+def main(*, argv=None) -> int:
     args = parse_args(argv)
     changes = do_all_replacements(all_filenames(args.files))
     if changes:
