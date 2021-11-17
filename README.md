@@ -90,9 +90,9 @@ characters.
 
 These are directional formatting characters which can be used to construct text
 with unexpected or unclear semantics. For example, in programming languages
-which allow bidirectional text in statements, `True = ייִדיש` can be written
+which allow bidirectional text in statements, `"X" = ייִדיש` can be written
 with right-to-left reversal to mean that the variable `ייִדיש` is assigned a
-value of `True`.
+value of `"X"`.
 
 ## CHANGELOG
 
