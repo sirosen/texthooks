@@ -16,7 +16,7 @@ For example, if you want a macro of the form
 
 in markdown, then specify
 
-   'issue:' '[texthooks#$VALUE](https://github.com/sirosen/texthooks/issues/$VALUE)"
+   'issue:' '[texthooks#$VALUE](https://github.com/sirosen/texthooks/issues/$VALUE)'
 """
 import re
 

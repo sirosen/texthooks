@@ -12,7 +12,7 @@ To use with `pre-commit`, include this repo and the desired hooks in
 
 ```yaml
 - repo: https://github.com/sirosen/texthooks
-  rev: 0.1.0
+  rev: 0.3.0
   hooks:
     - id: fix-smartquotes
     - id: fix-ligatures
@@ -63,7 +63,7 @@ as follows:
 
 ```yaml
 - repo: https://github.com/sirosen/texthooks
-  rev: 0.1.0
+  rev: 0.3.0
   hooks:
     - id: fix-smartquotes
       # replace default single quote chars with this set:
@@ -72,7 +72,7 @@ as follows:
       args: ["--single-quote-codepoints", "0027,FF07,2018,201B,2019"]
 ```
 
-### fix-ligatures
+### `fix-ligatures`
 
 Automatically find and replace ligature characters with their ascii equivalents.
 
@@ -83,7 +83,7 @@ presentation with their strictly-equivalent ASCII counterparts. For example,
 This hook converts these back into ASCII so that tools like `grep` will behave
 as expected.
 
-### forbid-bidi-controls
+### `forbid-bidi-controls`
 
 This is checker which forbids the use of unicode bidirectional text control
 characters.
@@ -94,7 +94,27 @@ which allow bidirectional text in statements, `"X" = ייִדיש` can be writte
 with right-to-left reversal to mean that the variable `ייִדיש` is assigned a
 value of `"X"`.
 
+### `macro-expand`
+
+Replace simple "macro" strings in text. This fixer is a no-op if no macro
+arguments are supplied. Add `--macro` to arguments to do replacements.
+
+For example, convert `issue:NNN` to an issue link in markdown with the
+following sample config:
+
+```yaml
+- repo: https://github.com/sirosen/texthooks
+  rev: 0.3.0
+  hooks:
+    - id: macro-expand
+      args: ["--macro", "issue:", '[texthooks#$VALUE](https://github.com/sirosen/texthooks/issues/$VALUE)']
+```
+
 ## CHANGELOG
+
+### 0.3.0
+
+- Add the macro-expand fixer
 
 ### 0.2.2
 
