@@ -17,8 +17,8 @@
   language: python
   types: [text]
 - id: macro-expand
-  name: Expand simple text macros in files
-  description: 'Perform simple "macro" replacements in text files'
+  name: Expand text macros
+  description: 'Perform simple macro replacements in text files'
   entry: macro-expand
   language: python
   types: [text]

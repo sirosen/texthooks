@@ -107,7 +107,10 @@ following sample config:
   rev: 0.3.0
   hooks:
     - id: macro-expand
-      args: ["--macro", "issue:", '[texthooks#$VALUE](https://github.com/sirosen/texthooks/issues/$VALUE)']
+      args:
+        - "--macro"
+        - "issue:"
+        - '[texthooks#$VALUE](https://github.com/sirosen/texthooks/issues/$VALUE)'
 ```
 
 ## CHANGELOG
