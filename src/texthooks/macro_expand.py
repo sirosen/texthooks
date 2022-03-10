@@ -1,14 +1,10 @@
-#!/usr/bin/env python3
 """
 Modify text files in-place with expansions of "macros"
-Each macro is supplied in the format
+Each macro is supplied as a pair, a prefix and a format string.
 
-   prefix format_string
-
-'prefix' will be found and replaced anywhere in the file.
-The string immediately following the prefix, limited to word characters, will be
-replaced using the format string. The format string is normal text, but supports
-`$VALUE` to represent the replaced text.
+The 'prefix' will be found and replaced anywhere in the file. The string immediately
+following the prefix, limited to word characters, will be replaced using the format
+string. The format string supports `$VALUE` to represent the replaced text.
 
 For example, if you want a macro of the form
 
@@ -16,8 +12,8 @@ For example, if you want a macro of the form
 
 in markdown, then specify
 
-   'issue:' '[texthooks#$VALUE](https://github.com/sirosen/texthooks/issues/$VALUE)'
-"""
+   --macro 'issue:' '[texthooks#$VALUE](https://github.com/sirosen/texthooks/issues/$VALUE)'
+"""  # noqa: E501
 import re
 
 from ._common import all_filenames, parse_cli_args
@@ -53,7 +49,9 @@ def do_all_replacements(files, macro_list) -> DiffRecorder:
 
 
 def modify_cli_parser(parser):
-    parser.add_argument("-m", "--macro", nargs=2, action="append")
+    parser.add_argument(
+        "--macro", nargs=2, action="append", metavar=("PREFIX", "FORMAT")
+    )
 
 
 def parse_args(argv):

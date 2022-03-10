@@ -115,6 +115,10 @@ following sample config:
 
 ## CHANGELOG
 
+### 0.3.1
+
+- Minor fixes to docstrings
+
 ### 0.3.0
 
 - Add the macro-expand fixer

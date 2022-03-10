@@ -92,7 +92,7 @@ def parse_cli_args(
     modify_parser: t.Optional[t.Callable] = None,
     postprocess: t.Optional[t.Callable] = None,
 ):
-    parser = _standard_cli_parser(__doc__, fixer)
+    parser = _standard_cli_parser(doc, fixer)
     if modify_parser:
         modify_parser(parser)
 
