@@ -12,7 +12,7 @@ To use with `pre-commit`, include this repo and the desired hooks in
 
 ```yaml
 - repo: https://github.com/sirosen/texthooks
-  rev: 0.3.0
+  rev: 0.3.1
   hooks:
     - id: fix-smartquotes
     - id: fix-ligatures
@@ -63,7 +63,7 @@ as follows:
 
 ```yaml
 - repo: https://github.com/sirosen/texthooks
-  rev: 0.3.0
+  rev: 0.3.1
   hooks:
     - id: fix-smartquotes
       # replace default single quote chars with this set:
@@ -104,7 +104,7 @@ following sample config:
 
 ```yaml
 - repo: https://github.com/sirosen/texthooks
-  rev: 0.3.0
+  rev: 0.3.1
   hooks:
     - id: macro-expand
       args:
@@ -114,6 +114,10 @@ following sample config:
 ```
 
 ## CHANGELOG
+
+### Unreleased
+
+<!-- bumpversion-changelog -->
 
 ### 0.3.1
 
