@@ -10,6 +10,12 @@
   entry: fix-ligatures
   language: python
   types: [text]
+- id: fix-spaces
+  name: 'Fix irregular space characters by normalizing to "space"'
+  description: 'Replace non-breaking spaces and other characters with the standard space character'
+  entry: fix-spaces
+  language: python
+  types: [text]
 - id: forbid-bidi-controls
   name: Forbid the use of unicode BiDi control characters
   description: 'Check for lines of text which contain bidirectional text control characters'
