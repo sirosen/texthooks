@@ -4,16 +4,36 @@ on:
   pull_request:
 
 jobs:
+  mypy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.11"
+      - run: python -m pip install tox
+      - run: python -m tox -e mypy
+
+  check-pacakge-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.11"
+      - run: python -m pip install tox
+      - run: python -m tox -e twine-check
+
   test:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        py: ['3.7', '3.10']
+        py: ['3.7', '3.11']
         include:
           - os: windows-latest
-            py: "3.10"
+            py: "3.11"
           - os: macos-latest
-            py: "3.10"
+            py: "3.11"
     name: "Run Tests on ${{ matrix.os }}, py${{ matrix.py }}"
     runs-on: ${{ matrix.os }}
     steps:
@@ -21,11 +41,5 @@ jobs:
       - uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.py }}
-      - name: install requirements
-        run: python -m pip install tox
-      - name: lint
-        run: python -m tox -e lint,mypy
-      - name: test
-        run: python -m tox -e py
-      - name: twine-check
-        run: python -m tox -e twine-check
+      - run: python -m pip install tox
+      - run: python -m tox -e py
