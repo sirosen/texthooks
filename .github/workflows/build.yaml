@@ -27,13 +27,8 @@ jobs:
   test:
     strategy:
       matrix:
-        os: [ubuntu-latest]
+        os: [windows-latest, macos-latest, ubuntu-latest]
         py: ['3.7', '3.11']
-        include:
-          - os: windows-latest
-            py: "3.11"
-          - os: macos-latest
-            py: "3.11"
     name: "Run Tests on ${{ matrix.os }}, py${{ matrix.py }}"
     runs-on: ${{ matrix.os }}
     steps:
