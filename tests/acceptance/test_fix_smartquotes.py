@@ -66,3 +66,21 @@ Changes were made in these files:
         ^
 """
     )
+
+
+# issue #40 indicates a bug in the way that the fixer behaves on certain
+# non-quote characters
+def test_fix_smartquotes_issue40(runner):
+    result = runner(
+        fix_smartquotes_main,
+        """\
+“foo–bar”
+""",
+    )
+    assert result.exit_code == 1
+    assert (
+        result.file_data
+        == """\
+"foo–bar"
+"""
+    )
