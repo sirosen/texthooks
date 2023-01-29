@@ -72,6 +72,32 @@ as follows:
       args: ["--single-quote-codepoints", "0027,FF07,2018,201B,2019"]
 ```
 
+### `fix-spaces`
+
+Replace various unicode space characters with `" "`.
+
+This normalizes No-Break Space and similar characters to ensure that your files
+render the same way in all contexts. It does not modify newlines, carriage
+returns, or other whitespace characters outside of the Space Separator
+category.
+
+#### Overriding Space Characters
+
+An option is available for specifying exactly which characters will be
+replaced. For ease of use, they are specified as hex-encoded unicode
+codepoints.
+
+Suppose you wanted to *only* replace Thin Space (codepoint `2009`).
+You could override the space codepoints as follows:
+
+```yaml
+- repo: https://github.com/sirosen/texthooks
+  rev: 0.4.0
+  hooks:
+    - id: fix-spaces
+      args: ["--separator-codepoints", "2009"]
+```
+
 ### `fix-ligatures`
 
 Automatically find and replace ligature characters with their ascii equivalents.
@@ -118,6 +144,9 @@ following sample config:
 ### Unreleased
 
 <!-- bumpversion-changelog -->
+- Fix a bug in fixers when running on Windows which could cause data to be
+  written with the wrong encoding
+- Add `-v/--verbose` and `-q/--quiet` flags to tune output verbosity
 
 ### 0.4.0
 
