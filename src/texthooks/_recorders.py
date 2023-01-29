@@ -59,7 +59,9 @@ class DiffRecorder:
         # in py3.6+ the dict builtin maintains order, but being explicit is
         # slightly safer since we're being explicit about the fact that we want
         # to retain key order
-        self.by_fname = collections.OrderedDict()
+        self.by_fname: t.MutableMapping[
+            str, t.List[t.Tuple[str, str, int]]
+        ] = collections.OrderedDict()
         self._file_encoding = _determine_encoding()
 
     def add(self, fname, original, updated, lineno):
@@ -69,9 +71,6 @@ class DiffRecorder:
 
     def hasdiff(self, fname):
         return bool(self.by_fname.get(fname))
-
-    def changed_filenames(self):
-        return list(self.by_name.keys())
 
     def __bool__(self):
         return bool(self.by_fname)
@@ -137,7 +136,9 @@ class DiffRecorder:
 class CheckRecorder:
     def __init__(self, verbosity: int):
         self._printer = _VPrinter(verbosity)
-        self.by_fname = collections.OrderedDict()
+        self.by_fname: t.MutableMapping[
+            str, t.List[t.Tuple[str, str, int]]
+        ] = collections.OrderedDict()
         self._file_encoding = _determine_encoding()
 
     def add(self, fname, lineno):
