@@ -68,10 +68,12 @@ def gen_line_fixer(single_quote_regex, double_quote_regex):
     return line_fixer
 
 
-def do_all_replacements(files, single_quote_regex, double_quote_regex) -> DiffRecorder:
+def do_all_replacements(
+    files, single_quote_regex, double_quote_regex, verbosity
+) -> DiffRecorder:
     """Do replacements over a set of filenames, and return a list of filenames
     where changes were made."""
-    recorder = DiffRecorder()
+    recorder = DiffRecorder(verbosity)
     line_fixer = gen_line_fixer(single_quote_regex, double_quote_regex)
     for fn in all_filenames(files):
         recorder.run_line_fixer(line_fixer, fn)
@@ -129,7 +131,10 @@ def main(*, argv=None):
     single_quote_regex = codepoints2regex(args.single_quote_codepoints)
 
     changes = do_all_replacements(
-        all_filenames(args.files), single_quote_regex, double_quote_regex
+        all_filenames(args.files),
+        single_quote_regex,
+        double_quote_regex,
+        args.verbosity,
     )
     if changes:
         changes.print_changes(args.show_changes, args.color)

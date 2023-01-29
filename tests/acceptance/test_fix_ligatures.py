@@ -7,6 +7,13 @@ def test_fix_ligature_no_changes(runner):
     assert result.file_data == "foo"
 
 
+def test_fix_ligature_no_changes_verbose(runner):
+    result = runner(fix_ligatures_main, "foo", add_args=["-v"])
+    assert result.exit_code == 0
+    assert result.file_data == "foo"
+    assert "checking file.txt...ok" in result.stdout
+
+
 def test_fix_ligature_fi_stylistic_ligature(runner):
     result = runner(
         fix_ligatures_main,
@@ -21,6 +28,14 @@ conﬁg
 config
 """
     )
+    assert "checking file.txt..." not in result.stdout
+
+
+def test_fix_ligature_fi_stylistic_ligature_verbose(runner):
+    result = runner(fix_ligatures_main, "conﬁg\n", add_args=["-v"])
+    assert result.exit_code == 1
+    assert result.file_data == "config\n"
+    assert "checking file.txt...fail" in result.stdout
 
 
 def test_fix_ligature_showchanges_nocolor(runner):

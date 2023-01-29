@@ -72,6 +72,12 @@ def _standard_cli_parser(doc: str, fixer: bool):
             help="Show the lines which were changed",
         )
     parser.add_argument(
+        "-v", "--verbose", action="count", help="Increase output verbosity", default=0
+    )
+    parser.add_argument(
+        "-q", "--quiet", action="count", help="Decrease output verbosity", default=0
+    )
+    parser.add_argument(
         "--color",
         type=str.lower,
         nargs=1,
@@ -99,6 +105,8 @@ def parse_cli_args(
     if argv is None:
         argv = sys.argv[1:]
     args = parser.parse_args(argv)
+
+    args.verbosity = 1 + args.verbose - args.quiet
 
     if postprocess:
         args = postprocess(args)

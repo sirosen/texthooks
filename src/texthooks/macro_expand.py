@@ -38,10 +38,10 @@ def gen_line_fixer(macro_list):
     return line_fixer
 
 
-def do_all_replacements(files, macro_list) -> DiffRecorder:
+def do_all_replacements(files, macro_list, verbosity) -> DiffRecorder:
     """Do replacements over a set of filenames, and return a list of filenames
     where changes were made."""
-    recorder = DiffRecorder()
+    recorder = DiffRecorder(verbosity)
     line_fixer = gen_line_fixer(macro_list)
     for fn in all_filenames(files):
         recorder.run_line_fixer(line_fixer, fn)
@@ -65,7 +65,7 @@ def parse_args(argv):
 
 def main(*, argv=None):
     args = parse_args(argv)
-    changes = do_all_replacements(all_filenames(args.files), args.macro)
+    changes = do_all_replacements(all_filenames(args.files), args.macro, args.verbosity)
     if changes:
         changes.print_changes(args.show_changes, args.color)
         return 1

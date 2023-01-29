@@ -1,3 +1,5 @@
+import os
+import pathlib
 import typing as t
 
 import pytest
@@ -40,8 +42,13 @@ def runner(tmp_path, capsys):
         newfile = tmp_path / filename
         newfile.write_text(data, encoding=encoding)
 
-        result = _CLIResult(newfile)
-        result.exit_code = fixer_main(argv=[str(newfile)] + add_args)
+        old_cwd = pathlib.Path.cwd()
+        try:
+            os.chdir(tmp_path)
+            result = _CLIResult(filename)
+            result.exit_code = fixer_main(argv=[filename] + add_args)
+        finally:
+            os.chdir(old_cwd)
 
         with open(newfile, encoding=encoding) as fp:
             result.file_data = fp.read()

@@ -54,10 +54,10 @@ def gen_line_fixer(separator_regex):
     return line_fixer
 
 
-def do_all_replacements(files, separator_regex) -> DiffRecorder:
+def do_all_replacements(files, separator_regex, verbosity) -> DiffRecorder:
     """Do replacements over a set of filenames, and return a list of filenames
     where changes were made."""
-    recorder = DiffRecorder()
+    recorder = DiffRecorder(verbosity)
     line_fixer = gen_line_fixer(separator_regex)
     for fn in all_filenames(files):
         recorder.run_line_fixer(line_fixer, fn)
@@ -100,7 +100,9 @@ def main(*, argv=None):
 
     separator_regex = codepoints2regex(args.separator_codepoints)
 
-    changes = do_all_replacements(all_filenames(args.files), separator_regex)
+    changes = do_all_replacements(
+        all_filenames(args.files), separator_regex, verbosity=args.verbosity
+    )
     if changes:
         changes.print_changes(args.show_changes, args.color)
         return 1

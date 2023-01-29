@@ -42,10 +42,10 @@ def replace_ligatures_str(s: str) -> str:
     return REPLACEMENT_PATTERN.sub(_re_subfunc, s)
 
 
-def do_all_replacements(files) -> DiffRecorder:
+def do_all_replacements(files, verbosity) -> DiffRecorder:
     """Do replacements over a set of filenames, and return a list of filenames
     where changes were made."""
-    recorder = DiffRecorder()
+    recorder = DiffRecorder(verbosity)
 
     for fn in all_filenames(files):
         recorder.run_line_fixer(replace_ligatures_str, fn)
@@ -58,7 +58,7 @@ def parse_args(argv):
 
 def main(*, argv=None) -> int:
     args = parse_args(argv)
-    changes = do_all_replacements(all_filenames(args.files))
+    changes = do_all_replacements(all_filenames(args.files), args.verbosity)
     if changes:
         changes.print_changes(args.show_changes, args.color, charwidth=charwidth)
         return 1
