@@ -32,6 +32,16 @@ and then invoke, e.g.
 fix-smartquotes FILENAME
 ```
 
+## Hook Summary
+
+| **Hook**               | **Description**                                  |
+| ---------------------- | ------------------------------------------------ |
+| `fix-smartquotes`      | Replace curly quotes with ASCII quotes.          |
+| `fix-spaces`           | Normalize special space markers to ASCII spaces. |
+| `fix-ligatures`        | Convert stylistic ligatures to ASCII text.       |
+| `forbid-bidi-controls` | Check for bi-directional text.                   |
+| `macro-expand`         | A simple way to write text formatting macros.    |
+
 ## Supported Hooks
 
 ### `fix-smartquotes`
