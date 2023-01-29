@@ -25,7 +25,7 @@ def _gen_change_caret_line(
     return gen
 
 
-def _compat_readlines(filename: str) -> t.List[str]:
+def _determine_encoding() -> str:
     # determine encoding from defaults, but convert "ascii" to "utf-8"
     encoding = sys.getfilesystemencoding() or sys.getdefaultencoding()
     try:
@@ -35,6 +35,10 @@ def _compat_readlines(filename: str) -> t.List[str]:
     if is_ascii:
         encoding = "utf-8"
 
+    return encoding
+
+
+def _readlines(filename: str, encoding: str) -> t.List[str]:
     with open(filename, "r", encoding=encoding) as f:
         return f.readlines()
 
@@ -45,6 +49,7 @@ class DiffRecorder:
         # slightly safer since we're being explicit about the fact that we want
         # to retain key order
         self.by_fname = collections.OrderedDict()
+        self._file_encoding = _determine_encoding()
 
     def add(self, fname, original, updated, lineno):
         if fname not in self.by_fname:
@@ -68,7 +73,7 @@ class DiffRecorder:
         line-fixer function which takes lines as input and produces lines as output.
 
         Returns True if changes were made, False if none were made"""
-        content = _compat_readlines(filename)
+        content = _readlines(filename, self._file_encoding)
 
         newcontent = []
         for lineno, line in enumerate(content, 1):
@@ -78,7 +83,7 @@ class DiffRecorder:
                 self.add(filename, line, newline, lineno)
 
         if self.hasdiff(filename):
-            with open(filename, "w") as f:
+            with open(filename, "w", encoding=self._file_encoding) as f:
                 f.write("".join(newcontent))
             return True
         return False
@@ -118,6 +123,7 @@ class DiffRecorder:
 class CheckRecorder:
     def __init__(self):
         self.by_fname = collections.OrderedDict()
+        self._file_encoding = _determine_encoding()
 
     def add(self, fname, lineno):
         if fname not in self.by_fname:
@@ -133,7 +139,7 @@ class CheckRecorder:
     def run_line_checker(
         self, line_checker: t.Callable[[str], bool], filename: str
     ) -> bool:
-        content = _compat_readlines(filename)
+        content = _readlines(filename, self._file_encoding)
 
         for lineno, line in enumerate(content, 1):
             if not line_checker(line):
