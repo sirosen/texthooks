@@ -116,7 +116,7 @@ class DiffRecorder:
                 filename_c = filename
             self._printer.out(f"  {filename_c}")
             if show_changes:
-                for (original, updated, lineno) in changeset:
+                for original, updated, lineno in changeset:
                     original = "-" + original.rstrip()
                     updated = "+" + updated.rstrip()
                     caret_line = " " + _gen_change_caret_line(
