@@ -48,7 +48,7 @@ def sort_line(line: str) -> str:
     if line == "" or line.strip().startswith("#"):
         return line
     # also normalizes whitespace
-    dedented = line.lstrip()
+    dedented = line.lstrip().rstrip()
     elements = WS_PAT.split(dedented)
     if len(elements) < 2:
         return line

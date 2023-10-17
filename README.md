@@ -179,6 +179,7 @@ following sample config:
 ### Unreleased
 
 <!-- bumpversion-changelog -->
+- Minor whitespace bugfix for `alphabetize-codeowners`
 
 ### 0.6.1
 
