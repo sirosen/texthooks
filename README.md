@@ -14,6 +14,7 @@ To use with `pre-commit`, include this repo and the desired hooks in
 - repo: https://github.com/sirosen/texthooks
   rev: 0.5.0
   hooks:
+    - id: alphabetize-codeowners
     - id: fix-smartquotes
     - id: fix-ligatures
 ```
@@ -34,15 +35,39 @@ fix-smartquotes FILENAME
 
 ## Hook Summary
 
-| **Hook**               | **Description**                                  |
-| ---------------------- | ------------------------------------------------ |
-| `fix-smartquotes`      | Replace curly quotes with ASCII quotes.          |
-| `fix-spaces`           | Normalize special space markers to ASCII spaces. |
-| `fix-ligatures`        | Convert stylistic ligatures to ASCII text.       |
-| `forbid-bidi-controls` | Check for bi-directional text.                   |
-| `macro-expand`         | A simple way to write text formatting macros.    |
+| **Hook**                 | **Description**                                  |
+| ------------------------ | ------------------------------------------------ |
+| `alphabetize-codeowners` | Alphabetize names in CODEOWNERS files.           |
+| `fix-smartquotes`        | Replace curly quotes with ASCII quotes.          |
+| `fix-spaces`             | Normalize special space markers to ASCII spaces. |
+| `fix-ligatures`          | Convert stylistic ligatures to ASCII text.       |
+| `forbid-bidi-controls`   | Check for bi-directional text.                   |
+| `macro-expand`           | A simple way to write text formatting macros.    |
 
 ## Supported Hooks
+
+### `alphabetize-codeowners`
+
+Normalize `CODEOWNERS` files to always list people and teams in the same order
+by alphabetizing.
+
+The default hook targets `CODEOWNERS`, `.github/CODEOWNERS`, and
+`docs/CODEOWNERS`.
+
+#### Sorts Owners, Not Lines
+
+`alphabetize-codeowners` alphabetizes the lists of *owners* per path.
+It does not alphabetize the lines in the file or otherwise sort them.
+
+#### Ignores Comments and Empty Lines
+
+Any comment lines or empty lines should be left unmodified by the hook.
+
+#### Normalizes Whitespace
+
+On the lines which are modified, the hook will normalize the line to have no
+leading whitespace, and to separate codeowner names with a single space
+character.
 
 ### `fix-smartquotes`
 
