@@ -2,9 +2,8 @@
 """
 A fixer script which crawls text files and replaces smartquotes with
 normal quote characters.
-
-This fixes copy-paste from some applications which replace double-quotes with curly
-quotes.
+This fixes copy-paste from some applications which replace double-quotes with
+curly quotes.
 
 For extra credit, it handles alternate encodings of quotation marks and
 dingbats.

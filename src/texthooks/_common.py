@@ -55,29 +55,37 @@ class ColorParseAction(argparse.Action):
         setattr(namespace, self.dest, values == "on")
 
 
-def _standard_cli_parser(doc: str, fixer: bool):
+def _standard_cli_parser(doc: str, fixer: bool, disable_args=None):
+    if disable_args is None:
+        disable_args = []
+
     parser = argparse.ArgumentParser(
         description=doc, formatter_class=argparse.RawDescriptionHelpFormatter
     )
-    parser.add_argument(
+
+    def _maybe_add_arg(*args, **kwargs):
+        if any(arg in disable_args for arg in args):
+            return
+        parser.add_argument(*args, **kwargs)
+
+    _maybe_add_arg(
         "files",
         nargs="*",
         help="default: all text files in current directory (recursive)",
     )
-    if fixer:
-        parser.add_argument(
-            "--show-changes",
-            action="store_true",
-            default=False,
-            help="Show the lines which were changed",
-        )
-    parser.add_argument(
+    _maybe_add_arg(
+        "--show-changes",
+        action="store_true",
+        default=False,
+        help="Show the lines which were changed",
+    )
+    _maybe_add_arg(
         "-v", "--verbose", action="count", help="Increase output verbosity", default=0
     )
-    parser.add_argument(
+    _maybe_add_arg(
         "-q", "--quiet", action="count", help="Decrease output verbosity", default=0
     )
-    parser.add_argument(
+    _maybe_add_arg(
         "--color",
         type=str.lower,
         nargs=1,
@@ -97,8 +105,9 @@ def parse_cli_args(
     argv=None,
     modify_parser: t.Optional[t.Callable] = None,
     postprocess: t.Optional[t.Callable] = None,
+    disable_args=None,
 ):
-    parser = _standard_cli_parser(doc, fixer)
+    parser = _standard_cli_parser(doc, fixer, disable_args)
     if modify_parser:
         modify_parser(parser)
 

@@ -84,7 +84,11 @@ class DiffRecorder:
 
         Returns True if changes were made, False if none were made"""
         self._printer.out(f"checking {filename}...", end="", verbosity=2)
-        content = _readlines(filename, self._file_encoding)
+        try:
+            content = _readlines(filename, self._file_encoding)
+        except FileNotFoundError:
+            self._printer.out(f"fail, FileNotFound: {filename}", verbosity=1)
+            raise
 
         newcontent = []
         for lineno, line in enumerate(content, 1):

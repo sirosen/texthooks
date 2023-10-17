@@ -155,6 +155,9 @@ following sample config:
 
 <!-- bumpversion-changelog -->
 
+- Add `alphabetize-codeowners` fixer (ported from
+  [sirosen/alphabetize-codeowners](https://github.com/sirosen/alphabetize-codeowners))
+
 ### 0.5.0
 
 - Fix a bug in fixers when running on Windows which could cause data to be
