@@ -93,6 +93,9 @@ class DiffRecorder:
         newcontent = []
         for lineno, line in enumerate(content, 1):
             newline = line_fixer(line)
+            # re-add newline if it was stripped by the fixer
+            if line.endswith("\n") and not newline.endswith("\n"):
+                newline += "\n"
             newcontent.append(newline)
             if newline != line:
                 self.add(filename, line, newline, lineno)

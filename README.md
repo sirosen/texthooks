@@ -179,6 +179,7 @@ following sample config:
 ### Unreleased
 
 <!-- bumpversion-changelog -->
+- Bugfix for `alphabetize-codeowners` stripping ending newlines
 
 ### 0.6.0
 
