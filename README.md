@@ -12,7 +12,7 @@ To use with `pre-commit`, include this repo and the desired hooks in
 
 ```yaml
 - repo: https://github.com/sirosen/texthooks
-  rev: 0.6.2
+  rev: 0.6.3
   hooks:
     - id: alphabetize-codeowners
     - id: fix-smartquotes
@@ -98,7 +98,7 @@ as follows:
 
 ```yaml
 - repo: https://github.com/sirosen/texthooks
-  rev: 0.6.2
+  rev: 0.6.3
   hooks:
     - id: fix-smartquotes
       # replace default single quote chars with this set:
@@ -127,7 +127,7 @@ You could override the space codepoints as follows:
 
 ```yaml
 - repo: https://github.com/sirosen/texthooks
-  rev: 0.6.2
+  rev: 0.6.3
   hooks:
     - id: fix-spaces
       args: ["--separator-codepoints", "2009"]
@@ -165,7 +165,7 @@ following sample config:
 
 ```yaml
 - repo: https://github.com/sirosen/texthooks
-  rev: 0.6.2
+  rev: 0.6.3
   hooks:
     - id: macro-expand
       args:
@@ -179,6 +179,10 @@ following sample config:
 ### Unreleased
 
 <!-- bumpversion-changelog -->
+
+### 0.6.3
+
+- Reduce length of hook names for `pre-commit.com` requirements
 
 ### 0.6.2
 
