@@ -22,3 +22,10 @@ repos:
   rev: 5.12.0
   hooks:
     - id: isort
+- repo: local
+  hooks:
+    - id: check-hook-name-length
+      name: 'Check hook name length'
+      language: python
+      entry: ./scripts/check-hook-name-length.py
+      files: ^\.pre-commit-hooks\.yaml$

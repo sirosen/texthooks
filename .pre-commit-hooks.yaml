@@ -11,7 +11,7 @@
   language: python
   types: [text]
 - id: fix-spaces
-  name: 'Fix irregular space characters by normalizing to "space"'
+  name: 'Normalize irregular space characters to "space"'
   description: 'Replace non-breaking spaces and other characters with the standard space character'
   entry: fix-spaces
   language: python
