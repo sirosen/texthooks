@@ -51,12 +51,17 @@ fix-smartquotes FILENAME
 Normalize `CODEOWNERS` files to always list people and teams in the same order
 by alphabetizing.
 
-The default hook targets `CODEOWNERS`, `.github/CODEOWNERS`, and
-`docs/CODEOWNERS`.
+The default hook targets
+
+- `CODEOWNERS`
+- `.github/CODEOWNERS`
+- `.gitlab/CODEOWNERS`
+- `.gitea/CODEOWNERS`
+- `docs/CODEOWNERS`
 
 #### Sorts Owners, Not Lines
 
-`alphabetize-codeowners` alphabetizes the lists of *owners* per path.
+`alphabetize-codeowners` alphabetizes the lists of _owners_ per path.
 It does not alphabetize the lines in the file or otherwise sort them.
 
 #### Ignores Comments and Empty Lines
@@ -73,7 +78,7 @@ character.
 
 This fixes copy-paste from some applications which replace double-quotes with curly
 quotes.
-It does *not* convert corner brackets, braile quotation marks, or angle
+It does _not_ convert corner brackets, braile quotation marks, or angle
 quotation marks. Those characters are not typically the result of copy-paste
 errors, so they are allowed.
 
@@ -91,7 +96,7 @@ Two options are available for specifying exactly which characters will be
 replaced. For ease of use, they are specified as hex-encoded unicode
 codepoints.
 
-Suppose you wanted to *avoid* replacing the "Heavy single comma quotation
+Suppose you wanted to _avoid_ replacing the "Heavy single comma quotation
 mark ornament" (`275C`) and the "Heavy single turned comma quotation mark
 ornament" (`275B`) characters. You could override the single quote codepoints
 as follows:
@@ -122,7 +127,7 @@ An option is available for specifying exactly which characters will be
 replaced. For ease of use, they are specified as hex-encoded unicode
 codepoints.
 
-Suppose you wanted to *only* replace Thin Space (codepoint `2009`).
+Suppose you wanted to _only_ replace Thin Space (codepoint `2009`).
 You could override the space codepoints as follows:
 
 ```yaml
@@ -171,7 +176,7 @@ following sample config:
       args:
         - "--macro"
         - "issue:"
-        - '[texthooks#$VALUE](https://github.com/sirosen/texthooks/issues/$VALUE)'
+        - "[texthooks#$VALUE](https://github.com/sirosen/texthooks/issues/$VALUE)"
 ```
 
 ## CHANGELOG
