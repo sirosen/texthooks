@@ -14,6 +14,7 @@ in markdown, then specify
 
    --macro 'issue:' '[texthooks#$VALUE](https://github.com/sirosen/texthooks/issues/$VALUE)'
 """  # noqa: E501
+
 import re
 
 from ._common import all_filenames, parse_cli_args
