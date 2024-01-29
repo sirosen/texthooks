@@ -34,4 +34,4 @@
   entry: alphabetize-codeowners
   language: python
   types: [text]
-  files: ^(CODEOWNERS|\.github/CODEOWNERS|docs/CODEOWNERS)$
+  files: ^(CODEOWNERS|docs/CODEOWNERS|\.(github|gitlab|gitea)/CODEOWNERS)$
