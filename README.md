@@ -179,6 +179,7 @@ following sample config:
 ### Unreleased
 
 <!-- bumpversion-changelog -->
+- Bugfix for empty line handling in `alphabetize-codeowners`
 
 ### 0.6.5
 

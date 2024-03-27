@@ -21,3 +21,16 @@ def test_alphabetize_codeowners_sorts(runner):
     result = runner(alphabetize_codeowners_main, "/foo/bar.txt @Bob @alice @charlie")
     assert result.exit_code == 1
     assert result.file_data == "/foo/bar.txt @alice @Bob @charlie"
+
+
+def test_alphabetize_codeowners_ignores_non_semantic_lines(runner):
+    result = runner(
+        alphabetize_codeowners_main,
+        """
+# comment 1: some comment
+
+# comment 2: some non-alphabetized strings
+# d c b a
+/foo/bar.txt @alice @charlie""",
+    )
+    assert result.exit_code == 0

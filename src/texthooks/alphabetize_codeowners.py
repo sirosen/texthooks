@@ -42,7 +42,7 @@ def _add_files_arg(parser):
 
 
 def sort_line(line: str) -> str:
-    if line == "" or line.strip().startswith("#"):
+    if line.strip() == "" or line.strip().startswith("#"):
         return line
     # also normalizes whitespace
     path, *owners = line.split()
