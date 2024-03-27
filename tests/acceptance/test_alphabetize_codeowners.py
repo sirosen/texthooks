@@ -12,7 +12,7 @@ def test_alphabetize_codeowners_no_changes(runner):
 
 
 def test_alphabetize_codeowners_normalizes_spaces(runner):
-    result = runner(alphabetize_codeowners_main, "/foo/bar.txt   @alice @bob")
+    result = runner(alphabetize_codeowners_main, " /foo/bar.txt @alice\t@bob ")
     assert result.exit_code == 1
     assert result.file_data == "/foo/bar.txt @alice @bob"
 

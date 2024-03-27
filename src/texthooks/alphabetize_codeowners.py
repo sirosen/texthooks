@@ -5,13 +5,10 @@ Alphabetize the list of owners for each path in .github/CODEOWNERS
 Ignores empty lines and comments, but normalizes whitespace on semantically significant
 lines
 """
-import re
 import sys
 
 from ._common import parse_cli_args
 from ._recorders import DiffRecorder
-
-WS_PAT = re.compile(r"\s+")
 
 
 def main(*, argv=None) -> int:
@@ -48,13 +45,10 @@ def sort_line(line: str) -> str:
     if line == "" or line.strip().startswith("#"):
         return line
     # also normalizes whitespace
-    dedented = line.lstrip().rstrip()
-    elements = WS_PAT.split(dedented)
-    if len(elements) < 2:
+    path, *owners = line.split()
+    if not len(owners):
         return line
-    path = elements[0]
-    owners = sorted(elements[1:], key=str.lower)
-    return " ".join([path] + owners)
+    return " ".join([path] + sorted(owners, key=str.lower))
 
 
 if __name__ == "__main__":
