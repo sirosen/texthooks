@@ -18,6 +18,6 @@ def test_alphabetize_codeowners_normalizes_spaces(runner):
 
 
 def test_alphabetize_codeowners_sorts(runner):
-    result = runner(alphabetize_codeowners_main, "/foo/bar.txt @bob @alice")
+    result = runner(alphabetize_codeowners_main, "/foo/bar.txt @Bob @alice @charlie")
     assert result.exit_code == 1
-    assert result.file_data == "/foo/bar.txt @alice @bob"
+    assert result.file_data == "/foo/bar.txt @alice @Bob @charlie"

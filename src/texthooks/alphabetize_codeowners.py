@@ -53,7 +53,7 @@ def sort_line(line: str) -> str:
     if len(elements) < 2:
         return line
     path = elements[0]
-    owners = sorted(elements[1:])
+    owners = sorted(elements[1:], key=str.lower)
     return " ".join([path] + owners)
 
 
