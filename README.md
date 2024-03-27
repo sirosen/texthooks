@@ -179,6 +179,8 @@ following sample config:
 ### Unreleased
 
 <!-- bumpversion-changelog -->
+- `alphabetize-codeowners` is now case insensitive and normalizes whitespace
+  better. Thanks @kurtmckee for the PR!
 
 ### 0.6.4
 

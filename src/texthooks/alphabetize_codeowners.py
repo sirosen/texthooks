@@ -46,7 +46,7 @@ def sort_line(line: str) -> str:
         return line
     # also normalizes whitespace
     path, *owners = line.split()
-    if not len(owners):
+    if not owners:
         return line
     return " ".join([path] + sorted(owners, key=str.lower))
 
