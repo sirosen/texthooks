@@ -5,6 +5,7 @@ Alphabetize the list of owners for each path in .github/CODEOWNERS
 Ignores empty lines and comments, but normalizes whitespace on semantically significant
 lines
 """
+
 import sys
 
 from ._common import parse_cli_args
@@ -48,7 +49,7 @@ def sort_line(line: str) -> str:
     path, *owners = line.split()
     if not owners:
         return line
-    return " ".join([path] + sorted(owners, key=str.lower))
+    return " ".join([path] + sorted(owners, key=str.casefold))
 
 
 if __name__ == "__main__":
