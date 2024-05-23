@@ -179,6 +179,8 @@ following sample config:
 ### Unreleased
 
 <!-- bumpversion-changelog -->
+- Casefold codeowner names for better unicode sorting. Thanks @adam-moss for
+  the PR!
 
 ### 0.6.6
 
