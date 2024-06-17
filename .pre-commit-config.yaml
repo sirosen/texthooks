@@ -5,20 +5,20 @@ repos:
     - id: check-merge-conflict
     - id: trailing-whitespace
 - repo: https://github.com/python-jsonschema/check-jsonschema
-  rev: 0.28.2
+  rev: 0.28.5
   hooks:
     - id: check-github-workflows
     - id: check-dependabot
 - repo: https://github.com/psf/black-pre-commit-mirror
-  rev: 24.4.0
+  rev: 24.4.2
   hooks:
     - id: black
 - repo: https://github.com/sirosen/slyp
-  rev: 0.6.0
+  rev: 0.6.1
   hooks:
     - id: slyp
 - repo: https://github.com/PyCQA/flake8
-  rev: 7.0.0
+  rev: 7.1.0
   hooks:
     - id: flake8
       additional_dependencies:
