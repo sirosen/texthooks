@@ -7,7 +7,7 @@ import re
 import sys
 import typing as t
 
-import identify
+from identify import identify
 
 _ANSI_RE = re.compile(r"\033\[[;?0-9]*[a-zA-Z]")
 _ANSI_COLORS = {
