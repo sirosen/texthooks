@@ -12,7 +12,7 @@ To use with `pre-commit`, include this repo and the desired hooks in
 
 ```yaml
 - repo: https://github.com/sirosen/texthooks
-  rev: 0.6.6
+  rev: 0.6.7
   hooks:
     - id: alphabetize-codeowners
     - id: fix-smartquotes
@@ -98,7 +98,7 @@ as follows:
 
 ```yaml
 - repo: https://github.com/sirosen/texthooks
-  rev: 0.6.6
+  rev: 0.6.7
   hooks:
     - id: fix-smartquotes
       # replace default single quote chars with this set:
@@ -127,7 +127,7 @@ You could override the space codepoints as follows:
 
 ```yaml
 - repo: https://github.com/sirosen/texthooks
-  rev: 0.6.6
+  rev: 0.6.7
   hooks:
     - id: fix-spaces
       args: ["--separator-codepoints", "2009"]
@@ -165,7 +165,7 @@ following sample config:
 
 ```yaml
 - repo: https://github.com/sirosen/texthooks
-  rev: 0.6.6
+  rev: 0.6.7
   hooks:
     - id: macro-expand
       args:
@@ -179,6 +179,9 @@ following sample config:
 ### Unreleased
 
 <!-- bumpversion-changelog -->
+
+### 0.6.7
+
 - Support GitLab section headers in alphabetize-codeowners when
   `--dialect=gitlab` is passed.
 - Casefold codeowner names for better unicode sorting. Thanks @adam-moss for
