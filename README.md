@@ -179,6 +179,8 @@ following sample config:
 ### Unreleased
 
 <!-- bumpversion-changelog -->
+- Support GitLab section headers in alphabetize-codeowners when
+  `--dialect=gitlab` is passed.
 - Casefold codeowner names for better unicode sorting. Thanks @adam-moss for
   the PR!
 
