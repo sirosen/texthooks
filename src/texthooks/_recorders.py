@@ -44,7 +44,7 @@ def _readlines(filename: str, encoding: str) -> t.List[str]:
 
 
 class _VPrinter:
-    def __init__(self, verbosity: int):
+    def __init__(self, verbosity: int) -> None:
         self.verbosity = verbosity
 
     def out(self, message: str, verbosity: int = 1, end: str = "\n") -> None:
@@ -54,7 +54,7 @@ class _VPrinter:
 
 
 class DiffRecorder:
-    def __init__(self, verbosity: int):
+    def __init__(self, verbosity: int) -> None:
         self._printer = _VPrinter(verbosity)
         # in py3.6+ the dict builtin maintains order, but being explicit is
         # slightly safer since we're being explicit about the fact that we want
@@ -141,7 +141,7 @@ class DiffRecorder:
 
 
 class CheckRecorder:
-    def __init__(self, verbosity: int):
+    def __init__(self, verbosity: int) -> None:
         self._printer = _VPrinter(verbosity)
         self.by_fname: t.MutableMapping[str, t.List[t.Tuple[str, str, int]]] = (
             collections.OrderedDict()
