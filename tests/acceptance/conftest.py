@@ -6,7 +6,7 @@ import pytest
 
 
 class _CLIResult:
-    def __init__(self, filename: str):
+    def __init__(self, filename: str) -> None:
         self.filename = filename
         self.file_data = None
         self.exit_code = 0
