@@ -73,13 +73,10 @@ def make_line_fixer(dialect: str) -> t.Callable[[str], str]:
 
 
 def sort_line_standard(line: str) -> str:
+    # sort a line's list of owners; also normalizes whitespace
     if line.strip() == "" or line.strip().startswith("#"):
         return line
-    # also normalizes whitespace
-    path, *owners = line.split()
-    if not owners:
-        return line
-    return " ".join([path] + sorted(owners, key=str.casefold))
+    return _sort_owners_line(line)
 
 
 def sort_line_gitlab(line: str) -> str:
@@ -100,10 +97,19 @@ def sort_line_gitlab(line: str) -> str:
             return line
         return " ".join([section] + sorted(default_owners, key=str.casefold))
     else:
-        path, *owners = line.split()
-        if not owners:
-            return line
-        return " ".join([path] + sorted(owners, key=str.casefold))
+        return _sort_owners_line(line)
+
+
+def _sort_owners_line(line: str) -> str:
+    data_part, comment_marker, comment_part = line.partition("#")
+    path, *owners = data_part.split()
+    if not owners:
+        return line
+
+    data_part = " ".join([path] + sorted(owners, key=str.casefold))
+    if comment_marker:
+        return f"{data_part}  #{comment_part}"
+    return data_part
 
 
 if __name__ == "__main__":

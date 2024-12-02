@@ -179,6 +179,9 @@ following sample config:
 ### Unreleased
 
 <!-- bumpversion-changelog -->
+- Inline comments on codeowners lines are no longer ignored and sorted as part
+  of the set of path owners. They are preserved and the leading whitespace is
+  normalized to two spaces.
 
 ### 0.6.7
 

@@ -113,3 +113,21 @@ def test_gitlab_alphabetize_codeowners_alphabetizes_default_owners_with_min_revi
 /foo/bar.txt
 /foo/baz.txt"""
     )
+
+
+@pytest.mark.parametrize("dialect", ("standard", "gitlab"))
+def test_alphabetize_codeowners_accepts_inline_comments(runner, dialect):
+    result = runner(
+        alphabetize_codeowners_main,
+        """\
+# some non-alphabetized strings will follow
+/foo/bar.txt @charlie @alice  # d b a c""",
+        add_args=["--dialect", dialect],
+    )
+    assert result.exit_code == 1
+    assert (
+        result.file_data
+        == """\
+# some non-alphabetized strings will follow
+/foo/bar.txt @alice @charlie  # d b a c"""
+    )
