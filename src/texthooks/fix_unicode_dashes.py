@@ -34,7 +34,8 @@ DEFAULT_HYPHEN_CODEPOINTS = (
     "FF0D",  # FULLWIDTH HYPHEN-MINUS (－)
 )
 
-# Unicode codepoints for dash characters that should be replaced with ASCII double hyphens
+# Unicode codepoints for dash characters that should be replaced with
+# ASCII double hyphens
 DEFAULT_EMDASH_CODEPOINTS = ("2014",)  # EM DASH (—)
 
 
