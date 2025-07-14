@@ -19,7 +19,7 @@ foo–bar—baz
     assert (
         result.file_data
         == """
-foo-bar-baz
+foo-bar--baz
 """
     )
 
@@ -65,5 +65,37 @@ Changes were made in these files:
     -foo–bar
     +foo-bar
         ^
+"""
+    )
+
+
+def test_fix_unicode_dashes_emdash_only(runner):
+    result = runner(
+        fix_unicode_dashes_main,
+        """
+foo—bar
+""",
+    )
+    assert result.exit_code == 1
+    assert (
+        result.file_data
+        == """
+foo--bar
+"""
+    )
+
+
+def test_fix_unicode_dashes_mixed_dashes(runner):
+    result = runner(
+        fix_unicode_dashes_main,
+        """
+foo–bar—baz–qux—quux
+""",
+    )
+    assert result.exit_code == 1
+    assert (
+        result.file_data
+        == """
+foo-bar--baz-qux--quux
 """
     )
