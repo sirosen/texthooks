@@ -11,7 +11,14 @@ The following Unicode characters are replaced:
 - U+2013 EN DASH (–) → ASCII hyphen (-)
 - U+2014 EM DASH (—) → ASCII double hyphen (--)
 - U+2212 MINUS SIGN (−) → ASCII hyphen (-)
-- U+FF0D FULLWIDTH HYPHEN-MINUS (－) → ASCII hyphen (-)
+- U+2012 FIGURE DASH (‒) → ASCII hyphen (-)
+- U+02D7 MODIFIER LETTER MINUS SIGN (˗) → ASCII hyphen (-)
+- U+2796 HEAVY MINUS SIGN (➖) → ASCII hyphen (-)
+- U+2010 HYPHEN (‐) → ASCII hyphen (-)
+- U+2011 NON-BREAKING HYPHEN (‑) → ASCII hyphen (-)
+- U+FE63 SMALL HYPHEN-MINUS (﹣) → ASCII hyphen (-)
+- U+FF0D FULLWIDTH HYPHEN-MINUS (－) → ASCII double hyphen (--)
+- U+FE58 SMALL EM DASH (﹘) → ASCII double hyphen (--)
 
 In files with the offending characters, they are replaced and the run is
 marked as failed. This makes the script suitable as a pre-commit fixer.
@@ -31,12 +38,21 @@ def codepoints2regex(codepoints):
 DEFAULT_HYPHEN_CODEPOINTS = (
     "2013",  # EN DASH (–)
     "2212",  # MINUS SIGN (−)
-    "FF0D",  # FULLWIDTH HYPHEN-MINUS (－)
+    "2012",  # FIGURE DASH (‒)
+    "02D7",  # MODIFIER LETTER MINUS SIGN (˗)
+    "2796",  # HEAVY MINUS SIGN (➖)
+    "2010",  # HYPHEN (‐)
+    "2011",  # NON-BREAKING HYPHEN (‑)
+    "FE63",  # SMALL HYPHEN-MINUS (﹣)
 )
 
-# Unicode codepoints for dash characters that should be replaced with
-# ASCII double hyphens
-DEFAULT_EMDASH_CODEPOINTS = ("2014",)  # EM DASH (—)
+# Unicode codepoints for dash characters that should be
+# replaced with ASCII double hyphens
+DEFAULT_EMDASH_CODEPOINTS = (
+    "2014",  # EM DASH (—)
+    "FF0D",  # FULLWIDTH HYPHEN-MINUS (－) - treated as em-dash per reviewer
+    "FE58",  # SMALL EM DASH (﹘)
+)
 
 
 def gen_line_fixer(hyphen_regex, emdash_regex):

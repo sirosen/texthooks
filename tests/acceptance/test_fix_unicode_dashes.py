@@ -36,7 +36,7 @@ foo－bar−baz
     assert (
         result.file_data
         == """
-foo-bar-baz
+foo--bar-baz
 """
     )
 
@@ -97,5 +97,41 @@ foo–bar—baz–qux—quux
         result.file_data
         == """
 foo-bar--baz-qux--quux
+"""
+    )
+
+
+def test_fix_unicode_dashes_new_characters(runner):
+    # Test the new characters added based on reviewer feedback
+    # U+2012 (figure dash), U+02D7 (modifier letter minus), U+2796 (heavy minus)
+    # U+2010 (hyphen), U+2011 (non-breaking hyphen), U+FE63 (small hyphen-minus)
+    result = runner(
+        fix_unicode_dashes_main,
+        """
+foo‒bar˗baz➖qux‐quux‑corge﹣grault
+""",
+    )
+    assert result.exit_code == 1
+    assert (
+        result.file_data
+        == """
+foo-bar-baz-qux-quux-corge-grault
+"""
+    )
+
+
+def test_fix_unicode_dashes_small_em_dash(runner):
+    # U+FE58 (SMALL EM DASH)
+    result = runner(
+        fix_unicode_dashes_main,
+        """
+foo﹘bar
+""",
+    )
+    assert result.exit_code == 1
+    assert (
+        result.file_data
+        == """
+foo--bar
 """
     )
