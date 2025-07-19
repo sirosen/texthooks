@@ -4,6 +4,12 @@
   entry: fix-smartquotes
   language: python
   types: [text]
+- id: fix-unicode-dashes
+  name: Fix Unicode dash characters
+  description: "Replace Unicode dash characters (en-dash, em-dash, etc.) with ASCII hyphens"
+  entry: fix-unicode-dashes
+  language: python
+  types: [text]
 - id: fix-ligatures
   name: Fix ligature characters with NFKD normalization
   description: 'Replace ligature characters with normalized individual characters'
