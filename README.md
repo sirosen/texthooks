@@ -218,6 +218,8 @@ following sample config:
 
 <!-- bumpversion-changelog -->
 - Add `fix-unicode-dashes` fixer. Thanks @netflash for the PR!
+- Fix handling of empty sets of codepoints for `fix-smartquotes` and
+  `fix-unicode-dashes`.
 
 ### 0.6.8
 
