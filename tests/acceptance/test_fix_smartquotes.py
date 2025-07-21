@@ -84,3 +84,25 @@ def test_fix_smartquotes_issue40(runner):
 "foo–bar"
 """
     )
+
+
+def test_fix_smartquotes_can_have_a_rule_disabled(runner):
+    # pass `""` for a list of codepoints to disable the rule
+    result = runner(
+        fix_smartquotes_main,
+        """
+don＇t write like this
+""",
+        add_args=["--single-quote-codepoints", ""],
+    )
+    assert result.exit_code == 0, str(result)
+
+    # run again on double-quotes
+    result = runner(
+        fix_smartquotes_main,
+        """
+“some data”
+""",
+        add_args=["--double-quote-codepoints", ""],
+    )
+    assert result.exit_code == 0

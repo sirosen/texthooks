@@ -135,3 +135,25 @@ foo﹘bar
 foo--bar
 """
     )
+
+
+def test_fix_unicode_dashes_can_have_a_rule_disabled(runner):
+    # pass `""` for a list of codepoints to disable the rule
+    result = runner(
+        fix_unicode_dashes_main,
+        """
+foo—bar
+""",
+        add_args=["--double-hyphen-codepoints", ""],
+    )
+    assert result.exit_code == 0
+
+    # run again on double-hyphen case
+    result = runner(
+        fix_unicode_dashes_main,
+        """
+foo–bar
+""",
+        add_args=["--single-hyphen-codepoints", ""],
+    )
+    assert result.exit_code == 0

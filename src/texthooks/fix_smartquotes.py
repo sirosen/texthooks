@@ -60,20 +60,42 @@ DEFAULT_SINGLE_QUOTE_CODEPOINTS = (
 )
 
 
-def gen_line_fixer(single_quote_regex, double_quote_regex):
-    def line_fixer(line):
-        return single_quote_regex.sub("'", double_quote_regex.sub('"', line))
+def gen_line_fixer(single_quote_codepoints, double_quote_codepoints):
+    single_quote_regex = (
+        codepoints2regex(single_quote_codepoints) if single_quote_codepoints else None
+    )
+    double_quote_regex = (
+        codepoints2regex(double_quote_codepoints) if double_quote_codepoints else None
+    )
+
+    if single_quote_regex and double_quote_regex:
+
+        def line_fixer(line):
+            return single_quote_regex.sub("'", double_quote_regex.sub('"', line))
+
+    elif single_quote_regex:
+
+        def line_fixer(line):
+            return single_quote_regex.sub("'", line)
+
+    elif double_quote_regex:
+
+        def line_fixer(line):
+            return double_quote_regex.sub("'", line)
+
+    else:
+        raise NotImplementedError("Both replacement modes were disabled.")
 
     return line_fixer
 
 
 def do_all_replacements(
-    files, single_quote_regex, double_quote_regex, verbosity
+    files, single_quote_codepoints, double_quote_codepoints, verbosity
 ) -> DiffRecorder:
     """Do replacements over a set of filenames, and return a list of filenames
     where changes were made."""
     recorder = DiffRecorder(verbosity)
-    line_fixer = gen_line_fixer(single_quote_regex, double_quote_regex)
+    line_fixer = gen_line_fixer(single_quote_codepoints, double_quote_codepoints)
     for fn in all_filenames(files):
         recorder.run_line_fixer(line_fixer, fn)
     return recorder
@@ -102,14 +124,28 @@ def modify_cli_parser(parser):
 
 def postprocess_cli_args(args):
     # convert comma delimited lists manually
-    if args.double_quote_codepoints:
-        args.double_quote_codepoints = args.double_quote_codepoints.split(",")
-    else:
+
+    if args.double_quote_codepoints is None:
         args.double_quote_codepoints = DEFAULT_DOUBLE_QUOTE_CODEPOINTS
-    if args.single_quote_codepoints:
-        args.single_quote_codepoints = args.single_quote_codepoints.split(",")
+    elif args.double_quote_codepoints == "":
+        args.double_quote_codepoints = []
     else:
+        args.double_quote_codepoints = args.double_quote_codepoints.split(",")
+
+    if args.single_quote_codepoints is None:
         args.single_quote_codepoints = DEFAULT_SINGLE_QUOTE_CODEPOINTS
+    elif args.single_quote_codepoints == "":
+        args.single_quote_codepoints = []
+    else:
+        args.single_quote_codepoints = args.single_quote_codepoints.split(",")
+
+    if not (bool(args.double_quote_codepoints) or bool(args.single_quote_codepoints)):
+        print(
+            "fix-smartquotes cannot run when both sets of codepoints are empty.",
+            file=sys.stderr,
+        )
+        raise SystemExit(2)
+
     return args
 
 
@@ -126,13 +162,10 @@ def parse_args(argv):
 def main(*, argv=None):
     args = parse_args(argv)
 
-    double_quote_regex = codepoints2regex(args.double_quote_codepoints)
-    single_quote_regex = codepoints2regex(args.single_quote_codepoints)
-
     changes = do_all_replacements(
         all_filenames(args.files),
-        single_quote_regex,
-        double_quote_regex,
+        args.single_quote_codepoints,
+        args.double_quote_codepoints,
         args.verbosity,
     )
     if changes:

@@ -48,22 +48,42 @@ DEFAULT_DOUBLE_HYPHEN_CODEPOINTS = (
 )
 
 
-def gen_line_fixer(single_hyphen_regex, double_hyphen_regex):
-    def line_fixer(line):
-        line = double_hyphen_regex.sub("--", line)
-        line = single_hyphen_regex.sub("-", line)
-        return line
+def gen_line_fixer(single_hyphen_codepoints, double_hyphen_codepoints):
+    single_hyphen_regex = (
+        codepoints2regex(single_hyphen_codepoints) if single_hyphen_codepoints else None
+    )
+    double_hyphen_regex = (
+        codepoints2regex(double_hyphen_codepoints) if double_hyphen_codepoints else None
+    )
+
+    if single_hyphen_regex and double_hyphen_regex:
+
+        def line_fixer(line):
+            return single_hyphen_regex.sub("-", double_hyphen_regex.sub("--", line))
+
+    elif single_hyphen_regex:
+
+        def line_fixer(line):
+            return single_hyphen_regex.sub("-", line)
+
+    elif double_hyphen_regex:
+
+        def line_fixer(line):
+            return double_hyphen_regex.sub("--", line)
+
+    else:
+        raise NotImplementedError("Both replacement modes were disabled.")
 
     return line_fixer
 
 
 def do_all_replacements(
-    files, single_hyphen_regex, double_hyphen_regex, verbosity
+    files, single_hyphen_codepoints, double_hyphen_codepoints, verbosity
 ) -> DiffRecorder:
     """Do replacements over a set of filenames, and return a list of filenames
     where changes were made."""
     recorder = DiffRecorder(verbosity)
-    line_fixer = gen_line_fixer(single_hyphen_regex, double_hyphen_regex)
+    line_fixer = gen_line_fixer(single_hyphen_codepoints, double_hyphen_codepoints)
     for fn in all_filenames(files):
         recorder.run_line_fixer(line_fixer, fn)
     return recorder
@@ -92,14 +112,28 @@ def modify_cli_parser(parser):
 
 def postprocess_cli_args(args):
     # convert comma delimited lists manually
-    if args.single_hyphen_codepoints:
-        args.single_hyphen_codepoints = args.hyphen_codepoints.split(",")
-    else:
+
+    if args.single_hyphen_codepoints is None:
         args.single_hyphen_codepoints = DEFAULT_SINGLE_HYPHEN_CODEPOINTS
-    if args.double_hyphen_codepoints:
-        args.double_hyphen_codepoints = args.double_hyphen_codepoints.split(",")
+    elif args.single_hyphen_codepoints == "":
+        args.single_hyphen_codepoints = []
     else:
+        args.single_hyphen_codepoints = args.hyphen_codepoints.split(",")
+
+    if args.double_hyphen_codepoints is None:
         args.double_hyphen_codepoints = DEFAULT_DOUBLE_HYPHEN_CODEPOINTS
+    elif args.double_hyphen_codepoints == "":
+        args.double_hyphen_codepoints = []
+    else:
+        args.double_hyphen_codepoints = args.double_hyphen_codepoints.split(",")
+
+    if not (bool(args.single_hyphen_codepoints) or bool(args.double_hyphen_codepoints)):
+        print(
+            "fix-unicode-dashes cannot run when both sets of codepoints are empty.",
+            file=sys.stderr,
+        )
+        raise SystemExit(2)
+
     return args
 
 
@@ -116,13 +150,10 @@ def parse_args(argv):
 def main(*, argv=None):
     args = parse_args(argv)
 
-    single_hyphen_regex = codepoints2regex(args.single_hyphen_codepoints)
-    double_hyphen_regex = codepoints2regex(args.double_hyphen_codepoints)
-
     changes = do_all_replacements(
         all_filenames(args.files),
-        single_hyphen_regex,
-        double_hyphen_regex,
+        args.single_hyphen_codepoints,
+        args.double_hyphen_codepoints,
         args.verbosity,
     )
     if changes:
