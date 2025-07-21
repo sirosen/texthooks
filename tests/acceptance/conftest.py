@@ -1,5 +1,6 @@
 import os
 import pathlib
+import textwrap
 import typing as t
 
 import pytest
@@ -36,9 +37,12 @@ def runner(tmp_path, capsys):
         add_args: t.Optional[t.List[str]] = None,
         filename: str = "file.txt",
         encoding: str = "utf-8",
+        dedent: bool = True,
     ):
         if not add_args:
             add_args = []
+        if dedent:
+            data = textwrap.dedent(data)
         newfile = tmp_path / filename
         newfile.write_text(data, encoding=encoding)
 

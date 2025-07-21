@@ -1,3 +1,5 @@
+from textwrap import dedent as d
+
 from texthooks._common import strip_ansi
 from texthooks.fix_unicode_dashes import main as fix_unicode_dashes_main
 
@@ -12,15 +14,14 @@ def test_fix_unicode_dashes_en_em_dash(runner):
     result = runner(
         fix_unicode_dashes_main,
         """
-foo–bar—baz
-""",
+        foo–bar—baz
+        """,
     )
     assert result.exit_code == 1
-    assert (
-        result.file_data
-        == """
-foo-bar--baz
-"""
+    assert result.file_data == d(
+        """
+        foo-bar--baz
+        """
     )
 
 
@@ -29,15 +30,14 @@ def test_fix_unicode_dashes_fullwidth_and_minus(runner):
     result = runner(
         fix_unicode_dashes_main,
         """
-foo－bar−baz
-""",
+        foo－bar−baz
+        """,
     )
     assert result.exit_code == 1
-    assert (
-        result.file_data
-        == """
-foo--bar-baz
-"""
+    assert result.file_data == d(
+        """
+        foo--bar-baz
+        """
     )
 
 
@@ -45,27 +45,25 @@ def test_fix_unicode_dashes_showchanges(runner):
     result = runner(
         fix_unicode_dashes_main,
         """
-foo–bar
-""",
+        foo–bar
+        """,
         add_args=["--show-changes"],
     )
     assert result.exit_code == 1
-    assert (
-        result.file_data
-        == """
-foo-bar
-"""
+    assert result.file_data == d(
+        """
+        foo-bar
+        """
     )
-    assert (
-        strip_ansi(result.stdout)
-        == f"""\
-Changes were made in these files:
-  {result.filename}
-  line 2:
-    -foo–bar
-    +foo-bar
-        ^
-"""
+    assert strip_ansi(result.stdout) == d(
+        f"""\
+        Changes were made in these files:
+          {result.filename}
+          line 2:
+            -foo–bar
+            +foo-bar
+                ^
+        """
     )
 
 
@@ -73,15 +71,14 @@ def test_fix_unicode_dashes_emdash_only(runner):
     result = runner(
         fix_unicode_dashes_main,
         """
-foo—bar
-""",
+        foo—bar
+        """,
     )
     assert result.exit_code == 1
-    assert (
-        result.file_data
-        == """
-foo--bar
-"""
+    assert result.file_data == d(
+        """
+        foo--bar
+        """
     )
 
 
@@ -89,15 +86,14 @@ def test_fix_unicode_dashes_mixed_dashes(runner):
     result = runner(
         fix_unicode_dashes_main,
         """
-foo–bar—baz–qux—quux
-""",
+        foo–bar—baz–qux—quux
+        """,
     )
     assert result.exit_code == 1
-    assert (
-        result.file_data
-        == """
-foo-bar--baz-qux--quux
-"""
+    assert result.file_data == d(
+        """
+        foo-bar--baz-qux--quux
+        """
     )
 
 
@@ -108,15 +104,14 @@ def test_fix_unicode_dashes_new_characters(runner):
     result = runner(
         fix_unicode_dashes_main,
         """
-foo‒bar˗baz➖qux‐quux‑corge﹣grault
-""",
+        foo‒bar˗baz➖qux‐quux‑corge﹣grault
+        """,
     )
     assert result.exit_code == 1
-    assert (
-        result.file_data
-        == """
-foo-bar-baz-qux-quux-corge-grault
-"""
+    assert result.file_data == d(
+        """
+        foo-bar-baz-qux-quux-corge-grault
+        """
     )
 
 
@@ -125,15 +120,14 @@ def test_fix_unicode_dashes_small_em_dash(runner):
     result = runner(
         fix_unicode_dashes_main,
         """
-foo﹘bar
-""",
+        foo﹘bar
+        """,
     )
     assert result.exit_code == 1
-    assert (
-        result.file_data
-        == """
-foo--bar
-"""
+    assert result.file_data == d(
+        """
+        foo--bar
+        """
     )
 
 
@@ -142,8 +136,8 @@ def test_fix_unicode_dashes_can_have_a_rule_disabled(runner):
     result = runner(
         fix_unicode_dashes_main,
         """
-foo—bar
-""",
+        foo—bar
+        """,
         add_args=["--double-hyphen-codepoints", ""],
     )
     assert result.exit_code == 0
@@ -152,8 +146,8 @@ foo—bar
     result = runner(
         fix_unicode_dashes_main,
         """
-foo–bar
-""",
+        foo–bar
+        """,
         add_args=["--single-hyphen-codepoints", ""],
     )
     assert result.exit_code == 0

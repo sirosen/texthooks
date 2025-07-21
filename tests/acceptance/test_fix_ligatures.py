@@ -1,3 +1,5 @@
+from textwrap import dedent as d
+
 from texthooks.fix_ligatures import main as fix_ligatures_main
 
 
@@ -18,15 +20,14 @@ def test_fix_ligature_fi_stylistic_ligature(runner):
     result = runner(
         fix_ligatures_main,
         """
-conﬁg
-""",
+        conﬁg
+        """,
     )
     assert result.exit_code == 1
-    assert (
-        result.file_data
-        == """
-config
-"""
+    assert result.file_data == d(
+        """
+        config
+        """
     )
     assert "checking file.txt..." not in result.stdout
 
@@ -42,25 +43,23 @@ def test_fix_ligature_showchanges_nocolor(runner):
     result = runner(
         fix_ligatures_main,
         """
-conﬁg conﬁg
-""",
+        conﬁg conﬁg
+        """,
         add_args=["--show-changes", "--color=off"],
     )
     assert result.exit_code == 1
-    assert (
-        result.file_data
-        == """
-config config
-"""
+    assert result.file_data == d(
+        """
+        config config
+        """
     )
-    assert (
-        result.stdout
-        == f"""\
-Changes were made in these files:
-  {result.filename}
-  line 2:
-    -conﬁg conﬁg
-    +config config
-        ^      ^
-"""
+    assert result.stdout == d(
+        f"""\
+        Changes were made in these files:
+          {result.filename}
+          line 2:
+            -conﬁg conﬁg
+            +config config
+                ^      ^
+        """
     )
