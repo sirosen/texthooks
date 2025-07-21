@@ -1,4 +1,4 @@
-PKG_VERSION=$(shell grep '^version' setup.cfg | cut -d '=' -f2 | tr -d ' ')
+PKG_VERSION=$(shell uvx mddj read version)
 
 .PHONY: lint test release showvars
 lint:
