@@ -40,6 +40,7 @@ fix-smartquotes FILENAME
 | `alphabetize-codeowners` | Alphabetize names in CODEOWNERS files.           |
 | `fix-smartquotes`        | Replace curly quotes with ASCII quotes.          |
 | `fix-spaces`             | Normalize special space markers to ASCII spaces. |
+| `fix-unicode-dashes`     | Normalize various dash characters to ASCII.      |
 | `fix-ligatures`          | Convert stylistic ligatures to ASCII text.       |
 | `forbid-bidi-controls`   | Check for bi-directional text.                   |
 | `macro-expand`           | A simple way to write text formatting macros.    |
@@ -133,6 +134,43 @@ You could override the space codepoints as follows:
       args: ["--separator-codepoints", "2009"]
 ```
 
+### `fix-unicode-dashes`
+
+Replace various unicode dash characters with `"-"` and `"--"`.
+
+This normalizes en dashes, minus signs, and similar characters to ensure that
+only ASCII hyphens are used.
+Wide dashes like the em dash are converted to two hyphens.
+
+This may help maintain ASCII-only text in files (e.g., program source) which
+may treat these glyphs in unexpected or undesirable ways.
+For example, some languages may treat `x–y` as an identifier, and `x-y` as an
+expression.
+
+#### Overriding Hyphen Characters
+
+Two options are provided to allow users to customize the set of codepoints
+which are replaced.
+They are specified as comma-delimited, hex-encoded Unicode codepoints.
+
+These are the options with their defaults:
+
+```
+--single-hyphen-codepoints '2010,2011,FE63,2012,2013,2212,02D7,2796'
+--double-hyphen-codepoints 'FF0D,2014,FE58'
+```
+
+Suppose you wanted to *only* replace Em Dash (codepoint `2014`).
+You could could override the double-hyphen codepoints as follows:
+
+```yaml
+- repo: https://github.com/sirosen/texthooks
+  rev: 0.6.8
+  hooks:
+    - id: fix-spaces
+      args: ["--double-hyphen-codepoints", "2014", "--single-hyphen-codepoints", ""]
+```
+
 ### `fix-ligatures`
 
 Automatically find and replace ligature characters with their ascii equivalents.
@@ -179,6 +217,7 @@ following sample config:
 ### Unreleased
 
 <!-- bumpversion-changelog -->
+- Add `fix-unicode-dashes` fixer. Thanks @netflash for the PR!
 
 ### 0.6.8
 
