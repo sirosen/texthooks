@@ -1,0 +1,63 @@
+[build-system]
+requires = ["flit-core>=3.11"]
+build-backend = "flit_core.buildapi"
+
+# --- project table and sub-tables
+
+[project]
+name = "texthooks"
+requires-python = ">=3.8"
+version = "0.6.8"
+description = "pre-commit fixers and linters for handling text files"
+readme = "README.md"
+keywords = []
+authors = [
+  { name = "Stephen Rosen", email = "sirosen0@gmail.com" },
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+dependencies = ["identify>=2.0,<3.0"]
+
+[project.optional-dependencies]
+dev = [
+    "pytest<9",
+    "pytest-cov<7",
+    "pytest-xdist<4",
+]
+
+[project.urls]
+source = "https://github.com/sirosen/texthooks"
+
+[project.scripts]
+alphabetize-codeowners = "texthooks.alphabetize_codeowners:main"
+fix-smartquotes = "texthooks.fix_smartquotes:main"
+fix-spaces = "texthooks.fix_spaces:main"
+fix-ligatures = "texthooks.fix_ligatures:main"
+fix-unicode-dashes = "texthooks.fix_unicode_dashes:main"
+forbid-bidi-controls = "texthooks.forbid_bidi_controls:main"
+macro-expand = "texthooks.macro_expand:main"
+
+# --- build backend configuration
+
+[tool.flit.sdist]
+include = ["LICENSE.txt", "tests/*.py", "tox.ini"]
+
+# --- non-build tool configs
+
+[tool.isort]
+profile = "black"
+
+[tool.mypy]
+# strict = true
+files = ["src"]
+ignore_missing_imports = true
