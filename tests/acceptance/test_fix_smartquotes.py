@@ -59,9 +59,10 @@ def test_fix_smartquotes_showchanges(runner):
         Changes were made in these files:
           {result.filename}
           line 2:
-            -don＇t write like this
-            +don't write like this
-                ^
+            - don＇t write like this
+                 ^
+            + don't write like this
+                 ^
         """
     )
 

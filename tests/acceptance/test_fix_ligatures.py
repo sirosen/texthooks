@@ -58,8 +58,9 @@ def test_fix_ligature_showchanges_nocolor(runner):
         Changes were made in these files:
           {result.filename}
           line 2:
-            -conﬁg conﬁg
-            +config config
-                ^      ^
+            - conﬁg conﬁg
+                 ^     ^
+            + config config
+                 ^^     ^^
         """
     )

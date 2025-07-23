@@ -131,3 +131,26 @@ def test_alphabetize_codeowners_accepts_inline_comments(runner, dialect):
         # some non-alphabetized strings will follow
         /foo/bar.txt @alice @charlie  # d b a c"""
     )
+
+
+# a regression test for https://github.com/sirosen/texthooks/issues/111
+def test_space_removal_will_align_in_show_changes_output(runner):
+    result = runner(
+        alphabetize_codeowners_main,
+        """\
+        /foo/bar.txt    @alice      @bob
+        """,
+        add_args=["--show-changes", "--color=off"],
+    )
+    assert result.exit_code == 1
+    assert result.stdout == d(
+        f"""\
+        Changes were made in these files:
+          {result.filename}
+          line 1:
+            - /foo/bar.txt    @alice      @bob
+                           ---       -----
+            + /foo/bar.txt @alice @bob
+        """
+    )
+    assert result.file_data == "/foo/bar.txt @alice @bob\n"
