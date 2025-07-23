@@ -7,7 +7,7 @@ build-backend = "flit_core.buildapi"
 [project]
 name = "texthooks"
 requires-python = ">=3.8"
-version = "0.7.0"
+version = "0.7.1"
 description = "pre-commit fixers and linters for handling text files"
 readme = "README.md"
 keywords = []
