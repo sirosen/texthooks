@@ -28,13 +28,6 @@ classifiers = [
 
 dependencies = ["identify>=2.0,<3.0"]
 
-[project.optional-dependencies]
-dev = [
-    "pytest<9",
-    "pytest-cov<7",
-    "pytest-xdist<4",
-]
-
 [project.urls]
 source = "https://github.com/sirosen/texthooks"
 
@@ -46,6 +39,19 @@ fix-ligatures = "texthooks.fix_ligatures:main"
 fix-unicode-dashes = "texthooks.fix_unicode_dashes:main"
 forbid-bidi-controls = "texthooks.forbid_bidi_controls:main"
 macro-expand = "texthooks.macro_expand:main"
+
+# --- dependency groups
+[dependency-groups]
+coverage = ["coverage[toml]"]
+test = [
+    "pytest<9",
+    "pytest-cov<7",
+    "pytest-xdist<4",
+    { include-group = "coverage" },
+]
+typing = ["mypy"]
+publish = ["twine", "build"]
+
 
 # --- build backend configuration
 
@@ -61,3 +67,22 @@ profile = "black"
 # strict = true
 files = ["src"]
 ignore_missing_imports = true
+
+
+[tool.coverage.run]
+parallel = true
+
+[tool.coverage.report]
+show_missing = true
+exclude_lines = [
+    # the pragma to disable coverage
+    "pragma: no cover",
+    # don't complain if tests don't hit unimplemented methods/modes
+    "raise NotImplementedError",
+    # don't check on executable components of importable modules
+    "if __name__ == .__main__.:",
+    # don't check coverage on type checking conditionals
+    "if t.TYPE_CHECKING:",
+    # skip overloads
+    "@t.overload",
+]
