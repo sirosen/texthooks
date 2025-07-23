@@ -1,28 +1,39 @@
+from __future__ import annotations
+
 import codecs
 import collections
+import difflib
 import sys
 import typing as t
 
 from ._common import colorize
 
 
-def _gen_change_caret_line(
-    original, updated, charwidth: t.Optional[t.Callable[[str], int]]
-):
-    shift = 0
-    indices = []
-    for idx, c in enumerate(original):
-        if c != updated[idx + shift]:
-            indices.append(idx)
-            if charwidth is not None:
-                shift += charwidth(c) - 1
-    gen = ""
-    cur = 0
-    for idx in indices:
-        gen += " " * (idx - cur)
-        gen += "^"
-        cur = idx
-    return gen
+def create_comparison_lines(old: str, new: str) -> list[str]:
+    """Compare two lines to make diff output to show changes."""
+    differ = difflib.Differ()
+    return [_clean_q(line).rstrip("\n") for line in differ.compare([old], [new])]
+
+
+# simplify the format produced by Differ (for single-line comparison)
+def _clean_q(s: str) -> str:
+    if s.startswith("?"):
+        return " " + s[1:]
+    return s
+
+
+def colorize_comparison(comparison: list[str]) -> list[str]:
+    result = []
+    for line in comparison:
+        if line.startswith("-"):
+            result.append(colorize(line, color="bright_red"))
+        elif line.startswith("+"):
+            result.append(colorize(line, color="bright_green"))
+        elif line.startswith("?"):
+            result.append(colorize(line, color="bright_cyan"))
+        else:
+            result.append(line)
+    return result
 
 
 def _determine_encoding() -> str:
@@ -124,20 +135,12 @@ class DiffRecorder:
             self._printer.out(f"  {filename_c}")
             if show_changes:
                 for original, updated, lineno in changeset:
-                    original = "-" + original.rstrip()
-                    updated = "+" + updated.rstrip()
-                    caret_line = " " + _gen_change_caret_line(
-                        original[1:], updated[1:], charwidth
-                    )
-
+                    comparison = create_comparison_lines(original, updated)
                     if ansi_colors:
-                        original = colorize(original, color="bright_red")
-                        updated = colorize(updated, color="bright_green")
-                        caret_line = colorize(caret_line, color="bright_cyan")
+                        comparison = colorize_comparison(comparison)
                     self._printer.out(f"  line {lineno}:")
-                    self._printer.out(f"    {original}")
-                    self._printer.out(f"    {updated}")
-                    self._printer.out(f"    {caret_line}")
+                    for line in comparison:
+                        self._printer.out(f"    {line}")
 
 
 class CheckRecorder:

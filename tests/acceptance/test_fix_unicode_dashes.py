@@ -60,9 +60,10 @@ def test_fix_unicode_dashes_showchanges(runner):
         Changes were made in these files:
           {result.filename}
           line 2:
-            -foo–bar
-            +foo-bar
-                ^
+            - foo–bar
+                 ^
+            + foo-bar
+                 ^
         """
     )
 
