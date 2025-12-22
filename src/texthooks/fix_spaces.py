@@ -89,7 +89,7 @@ def postprocess_cli_args(args: t.Any) -> t.Any:
     return args
 
 
-def parse_args(argv: t.Iterable[str] | None) -> t.Any:
+def parse_args(argv: list[str] | None) -> t.Any:
     return parse_cli_args(
         __doc__,
         fixer=True,
@@ -99,7 +99,7 @@ def parse_args(argv: t.Iterable[str] | None) -> t.Any:
     )
 
 
-def main(*, argv: t.Iterable[str] | None = None) -> int:
+def main(*, argv: list[str] | None = None) -> int:
     args = parse_args(argv)
 
     separator_regex = codepoints2regex(args.separator_codepoints)

@@ -44,11 +44,11 @@ def do_all_checks(files: t.Iterable[str] | None, verbosity: int) -> CheckRecorde
     return recorder
 
 
-def parse_args(argv: t.Iterable[str] | None) -> t.Any:
+def parse_args(argv: list[str] | None) -> t.Any:
     return parse_cli_args(__doc__, fixer=False, argv=argv)
 
 
-def main(*, argv: t.Iterable[str] | None = None) -> int:
+def main(*, argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     findings = do_all_checks(all_filenames(args.files), args.verbosity)
     if findings:
