@@ -70,26 +70,26 @@ class DiffRecorder:
         # in py3.6+ the dict builtin maintains order, but being explicit is
         # slightly safer since we're being explicit about the fact that we want
         # to retain key order
-        self.by_fname: t.MutableMapping[str, t.List[t.Tuple[str, str, int]]] = (
+        self.by_fname: t.MutableMapping[str, list[tuple[str, str, int]]] = (
             collections.OrderedDict()
         )
         self._file_encoding = _determine_encoding()
 
-    def add(self, fname, original, updated, lineno):
+    def add(self, fname: str, original: str, updated: str, lineno: int) -> None:
         if fname not in self.by_fname:
             self.by_fname[fname] = []
         self.by_fname[fname].append((original, updated, lineno))
 
-    def hasdiff(self, fname):
+    def hasdiff(self, fname: str) -> bool:
         return bool(self.by_fname.get(fname))
 
-    def __bool__(self):
+    def __bool__(self) -> bool:
         return bool(self.by_fname)
 
-    def items(self):
+    def items(self) -> t.Iterable[tuple[str, list[tuple[str, str, int]]]]:
         return self.by_fname.items()
 
-    def run_line_fixer(self, line_fixer: t.Callable[[str], str], filename: str):
+    def run_line_fixer(self, line_fixer: t.Callable[[str], str], filename: str) -> bool:
         """Given a filename, replace content and write *if* changes were made, using a
         line-fixer function which takes lines as input and produces lines as output.
 
@@ -124,7 +124,7 @@ class DiffRecorder:
         show_changes: bool,
         ansi_colors: bool,
         *,
-        charwidth: t.Optional[t.Callable[[str], int]] = None,
+        charwidth: t.Callable[[str], int] | None = None,
     ) -> None:
         self._printer.out("Changes were made in these files:")
         for filename, changeset in self.items():
@@ -146,20 +146,18 @@ class DiffRecorder:
 class CheckRecorder:
     def __init__(self, verbosity: int) -> None:
         self._printer = _VPrinter(verbosity)
-        self.by_fname: t.MutableMapping[str, t.List[t.Tuple[str, str, int]]] = (
-            collections.OrderedDict()
-        )
+        self.by_fname: t.MutableMapping[str, list[int]] = collections.OrderedDict()
         self._file_encoding = _determine_encoding()
 
-    def add(self, fname, lineno):
+    def add(self, fname: str, lineno: int) -> None:
         if fname not in self.by_fname:
             self.by_fname[fname] = []
         self.by_fname[fname].append(lineno)
 
-    def __bool__(self):
+    def __bool__(self) -> bool:
         return bool(self.by_fname)
 
-    def items(self):
+    def items(self) -> t.Iterable[tuple[str, list[int]]]:
         return self.by_fname.items()
 
     def run_line_checker(
