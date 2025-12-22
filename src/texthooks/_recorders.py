@@ -50,7 +50,7 @@ def _determine_encoding() -> str:
 
 
 def _readlines(filename: str, encoding: str) -> t.List[str]:
-    with open(filename, "r", encoding=encoding) as f:
+    with open(filename, encoding=encoding) as f:
         return f.readlines()
 
 

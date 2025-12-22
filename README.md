@@ -218,6 +218,9 @@ following sample config:
 
 <!-- bumpversion-changelog -->
 
+- Support Python 3.14
+- Remove support for Python 3.8 and 3.9
+
 ### 0.7.1
 
 - The output format when `--show-changes` is passed to hooks has changed
