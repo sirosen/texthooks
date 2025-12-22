@@ -5,36 +5,42 @@ on:
 
 jobs:
   mypy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
         with:
-          python-version: "3.12"
-      - run: python -m pip install tox
+          python-version: "3.14"
+      - run: python -m pip install tox tox-uv
       - run: python -m tox -e mypy
 
   check-pacakge-build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-slim
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
         with:
-          python-version: "3.12"
-      - run: python -m pip install tox
+          python-version: "3.14"
+      - run: python -m pip install tox tox-uv
       - run: python -m tox -e twine-check
 
   test:
     strategy:
       matrix:
-        os: [windows-latest, macos-latest, ubuntu-latest]
-        py: ['3.8', '3.12']
-    name: "Run Tests on ${{ matrix.os }}, py${{ matrix.py }}"
-    runs-on: ${{ matrix.os }}
+        os:
+          - name: Windows
+            runner: windows-latest
+          - name: macOS
+            runner: macos-latest
+          - name: Linux
+            runner: ubuntu-latest
+        py: ['3.10', '3.11', '3.12', '3.13', '3.14']
+    name: "Test py${{ matrix.py }} (${{ matrix.os.name }})"
+    runs-on: ${{ matrix.os.runner }}
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.py }}
-      - run: python -m pip install tox
+      - run: python -m pip install tox tox-uv
       - run: python -m tox -e py
