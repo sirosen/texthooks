@@ -8,6 +8,7 @@ lines.
 Use '--dialect=gitlab' in order to support GitLab's extended CODEOWNERS syntax.
 """
 
+import argparse
 import re
 import sys
 import typing as t
@@ -19,7 +20,7 @@ GITLAB_SECTION_TITLE_PATTERN = re.compile(r"\^?\[[^\]]+\]")
 GITLAB_SECTION_N_APPROVALS_PATTERN = re.compile(r"\[\d+\]")
 
 
-def main(*, argv=None) -> int:
+def main(*, argv: list[str] | None = None) -> int:
     args = parse_cli_args(
         __doc__,
         fixer=True,
@@ -47,7 +48,7 @@ def main(*, argv=None) -> int:
     return 0
 
 
-def _add_args(parser):
+def _add_args(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("files", nargs="*", help="default: .github/CODEOWNERS")
     parser.add_argument(
         "--dialect",

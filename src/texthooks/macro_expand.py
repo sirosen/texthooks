@@ -15,20 +15,22 @@ in markdown, then specify
    --macro 'issue:' '[texthooks#$VALUE](https://github.com/sirosen/texthooks/issues/$VALUE)'
 """  # noqa: E501
 
+import argparse
 import re
+import typing as t
 
 from ._common import all_filenames, parse_cli_args
 from ._recorders import DiffRecorder
 
 
-def macroexpand(content, prefix, fmt):
+def macroexpand(content: str, prefix: str, fmt: str) -> str:
     match_pattern = r"(^|\W)(" + re.escape(prefix) + r")(\w+)(\W|$)"
     replace_pattern = r"\1" + fmt.replace("$VALUE", r"\3") + r"\4"
     return re.sub(match_pattern, replace_pattern, content)
 
 
-def gen_line_fixer(macro_list):
-    def line_fixer(line):
+def gen_line_fixer(macro_list: list[tuple[str, str]] | None) -> t.Callable[[str], str]:
+    def line_fixer(line: str) -> str:
         if macro_list is None:
             return line
 
@@ -39,7 +41,11 @@ def gen_line_fixer(macro_list):
     return line_fixer
 
 
-def do_all_replacements(files, macro_list, verbosity) -> DiffRecorder:
+def do_all_replacements(
+    files: t.Iterable[str] | None,
+    macro_list: list[tuple[str, str]] | None,
+    verbosity: int,
+) -> DiffRecorder:
     """Do replacements over a set of filenames, and return a list of filenames
     where changes were made."""
     recorder = DiffRecorder(verbosity)
@@ -49,13 +55,13 @@ def do_all_replacements(files, macro_list, verbosity) -> DiffRecorder:
     return recorder
 
 
-def modify_cli_parser(parser):
+def modify_cli_parser(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--macro", nargs=2, action="append", metavar=("PREFIX", "FORMAT")
     )
 
 
-def parse_args(argv):
+def parse_args(argv: list[str] | None) -> t.Any:
     return parse_cli_args(
         __doc__,
         fixer=True,
@@ -64,7 +70,7 @@ def parse_args(argv):
     )
 
 
-def main(*, argv=None):
+def main(*, argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     changes = do_all_replacements(all_filenames(args.files), args.macro, args.verbosity)
     if changes:

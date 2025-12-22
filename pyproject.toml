@@ -67,6 +67,7 @@ profile = "black"
 # strict = true
 files = ["src"]
 ignore_missing_imports = true
+disallow_untyped_defs = true
 
 
 [tool.coverage.run]

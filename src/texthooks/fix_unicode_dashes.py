@@ -12,14 +12,16 @@ mark (U+30FC), are ignored.
 In files with the offending characters, they are replaced and the run is
 marked as failed. This makes the script suitable as a pre-commit fixer.
 """
+import argparse
 import re
 import sys
+import typing as t
 
 from ._common import all_filenames, codepoints2chars, parse_cli_args
 from ._recorders import DiffRecorder
 
 
-def codepoints2regex(codepoints):
+def codepoints2regex(codepoints: t.Sequence[str]) -> re.Pattern:
     return re.compile("(" + "|".join(codepoints2chars(codepoints)) + ")")
 
 
@@ -48,7 +50,9 @@ DEFAULT_DOUBLE_HYPHEN_CODEPOINTS = (
 )
 
 
-def gen_line_fixer(single_hyphen_codepoints, double_hyphen_codepoints):
+def gen_line_fixer(
+    single_hyphen_codepoints: t.Sequence[str], double_hyphen_codepoints: t.Sequence[str]
+) -> t.Callable[[str], str]:
     single_hyphen_regex = (
         codepoints2regex(single_hyphen_codepoints) if single_hyphen_codepoints else None
     )
@@ -58,17 +62,17 @@ def gen_line_fixer(single_hyphen_codepoints, double_hyphen_codepoints):
 
     if single_hyphen_regex and double_hyphen_regex:
 
-        def line_fixer(line):
+        def line_fixer(line: str) -> str:
             return single_hyphen_regex.sub("-", double_hyphen_regex.sub("--", line))
 
     elif single_hyphen_regex:
 
-        def line_fixer(line):
+        def line_fixer(line: str) -> str:
             return single_hyphen_regex.sub("-", line)
 
     elif double_hyphen_regex:
 
-        def line_fixer(line):
+        def line_fixer(line: str) -> str:
             return double_hyphen_regex.sub("--", line)
 
     else:
@@ -78,7 +82,10 @@ def gen_line_fixer(single_hyphen_codepoints, double_hyphen_codepoints):
 
 
 def do_all_replacements(
-    files, single_hyphen_codepoints, double_hyphen_codepoints, verbosity
+    files: t.Iterable[str] | None,
+    single_hyphen_codepoints: t.Sequence[str],
+    double_hyphen_codepoints: t.Sequence[str],
+    verbosity: int,
 ) -> DiffRecorder:
     """Do replacements over a set of filenames, and return a list of filenames
     where changes were made."""
@@ -89,7 +96,7 @@ def do_all_replacements(
     return recorder
 
 
-def modify_cli_parser(parser):
+def modify_cli_parser(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--single-hyphen-codepoints",
         type=str,
@@ -110,7 +117,7 @@ def modify_cli_parser(parser):
     )
 
 
-def postprocess_cli_args(args):
+def postprocess_cli_args(args: t.Any) -> t.Any:
     # convert comma delimited lists manually
 
     if args.single_hyphen_codepoints is None:
@@ -137,7 +144,7 @@ def postprocess_cli_args(args):
     return args
 
 
-def parse_args(argv):
+def parse_args(argv: list[str] | None) -> t.Any:
     return parse_cli_args(
         __doc__,
         fixer=True,
@@ -147,7 +154,7 @@ def parse_args(argv):
     )
 
 
-def main(*, argv=None):
+def main(*, argv: list[str] | None = None) -> int:
     args = parse_args(argv)
 
     changes = do_all_replacements(

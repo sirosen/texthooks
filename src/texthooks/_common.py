@@ -20,11 +20,11 @@ _ANSI_ESCAPE = "\033"
 _ANSI_RESET = f"{_ANSI_ESCAPE}[0m"
 
 
-def strip_ansi(s: str):
+def strip_ansi(s: str) -> str:
     return _ANSI_RE.sub("", s)
 
 
-def colorize(s: str, *, color: str, bold: bool = False):
+def colorize(s: str, *, color: str, bold: bool = False) -> str:
     colorcode = _ANSI_COLORS[color]
     boldcode = "1" if bold else "0"
     ansi_start = f"{_ANSI_ESCAPE}[{boldcode};{colorcode}m"
@@ -51,11 +51,19 @@ def all_filenames(files: t.Optional[t.Iterable[str]]) -> t.Iterator[str]:
 
 
 class ColorParseAction(argparse.Action):
-    def __call__(self, parser, namespace, values, option_string=None):
+    def __call__(
+        self,
+        parser: argparse.ArgumentParser,
+        namespace: argparse.Namespace,
+        values: t.Any,
+        option_string: str | None = None,
+    ) -> None:
         setattr(namespace, self.dest, values == "on")
 
 
-def _standard_cli_parser(doc: str, fixer: bool, disable_args=None):
+def _standard_cli_parser(
+    doc: str, fixer: bool, disable_args: t.Iterable[str] | None = None
+) -> argparse.ArgumentParser:
     if disable_args is None:
         disable_args = []
 
@@ -63,7 +71,7 @@ def _standard_cli_parser(doc: str, fixer: bool, disable_args=None):
         description=doc, formatter_class=argparse.RawDescriptionHelpFormatter
     )
 
-    def _maybe_add_arg(*args, **kwargs):
+    def _maybe_add_arg(*args: t.Any, **kwargs: t.Any) -> None:
         if any(arg in disable_args for arg in args):
             return
         parser.add_argument(*args, **kwargs)
@@ -102,11 +110,11 @@ def parse_cli_args(
     doc: str,
     *,
     fixer: bool,
-    argv=None,
-    modify_parser: t.Optional[t.Callable] = None,
-    postprocess: t.Optional[t.Callable] = None,
-    disable_args=None,
-):
+    argv: list[str] | None = None,
+    modify_parser: t.Callable[[argparse.ArgumentParser], None] | None = None,
+    postprocess: t.Callable[[argparse.Namespace], t.Any] | None = None,
+    disable_args: t.Iterable[str] | None = None,
+) -> argparse.Namespace:
     parser = _standard_cli_parser(doc, fixer, disable_args)
     if modify_parser:
         modify_parser(parser)

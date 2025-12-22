@@ -11,6 +11,7 @@ text.
 """
 import re
 import sys
+import typing as t
 
 from ._common import all_filenames, codepoint2char, parse_cli_args
 from ._recorders import DiffRecorder
@@ -29,7 +30,7 @@ CHAR_MAP = {  # remap in terms of chars
 REPLACEMENT_PATTERN = re.compile("(" + "|".join(CHAR_MAP.keys()) + ")")
 
 
-def _re_subfunc(match):
+def _re_subfunc(match: re.Match) -> str:
     x = match.group(0)
     return CHAR_MAP.get(x, x)
 
@@ -42,7 +43,7 @@ def replace_ligatures_str(s: str) -> str:
     return REPLACEMENT_PATTERN.sub(_re_subfunc, s)
 
 
-def do_all_replacements(files, verbosity) -> DiffRecorder:
+def do_all_replacements(files: t.Iterable[str] | None, verbosity: int) -> DiffRecorder:
     """Do replacements over a set of filenames, and return a list of filenames
     where changes were made."""
     recorder = DiffRecorder(verbosity)
@@ -52,11 +53,11 @@ def do_all_replacements(files, verbosity) -> DiffRecorder:
     return recorder
 
 
-def parse_args(argv):
+def parse_args(argv: list[str] | None) -> t.Any:
     return parse_cli_args(__doc__, argv=argv, fixer=True)
 
 
-def main(*, argv=None) -> int:
+def main(*, argv: list[str] | None = None) -> int:
     args = parse_args(argv)
     changes = do_all_replacements(all_filenames(args.files), args.verbosity)
     if changes:
