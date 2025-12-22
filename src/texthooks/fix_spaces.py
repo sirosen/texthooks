@@ -13,14 +13,16 @@ in a visually distinct way, and is therefore ignored.
 In files with the offending characters, they are replaced and the run is marked as
 failed. This makes the script suitable as a pre-commit fixer.
 """
+import argparse
 import re
 import sys
+import typing as t
 
 from ._common import all_filenames, codepoints2chars, parse_cli_args
 from ._recorders import DiffRecorder
 
 
-def codepoints2regex(codepoints):
+def codepoints2regex(codepoints: t.Sequence[str]) -> re.Pattern:
     return re.compile("(" + "|".join(codepoints2chars(codepoints)) + ")")
 
 
@@ -47,14 +49,16 @@ DEFAULT_SEPARATOR_CODEPOINTS = (
 )
 
 
-def gen_line_fixer(separator_regex):
-    def line_fixer(line):
+def gen_line_fixer(separator_regex: re.Pattern) -> t.Callable[[str], str]:
+    def line_fixer(line: str) -> str:
         return separator_regex.sub(" ", line)
 
     return line_fixer
 
 
-def do_all_replacements(files, separator_regex, verbosity) -> DiffRecorder:
+def do_all_replacements(
+    files: t.Iterable[str] | None, separator_regex: re.Pattern, verbosity: int
+) -> DiffRecorder:
     """Do replacements over a set of filenames, and return a list of filenames
     where changes were made."""
     recorder = DiffRecorder(verbosity)
@@ -64,7 +68,7 @@ def do_all_replacements(files, separator_regex, verbosity) -> DiffRecorder:
     return recorder
 
 
-def modify_cli_parser(parser):
+def modify_cli_parser(parser: argparse.ArgumentParser) -> None:
     parser.add_argument(
         "--separator-codepoints",
         type=str,
@@ -76,7 +80,7 @@ def modify_cli_parser(parser):
     )
 
 
-def postprocess_cli_args(args):
+def postprocess_cli_args(args: t.Any) -> t.Any:
     # convert comma delimited lists manually
     if args.separator_codepoints:
         args.separator_codepoints = args.separator_codepoints.split(",")
@@ -85,7 +89,7 @@ def postprocess_cli_args(args):
     return args
 
 
-def parse_args(argv):
+def parse_args(argv: t.Iterable[str] | None) -> t.Any:
     return parse_cli_args(
         __doc__,
         fixer=True,
@@ -95,7 +99,7 @@ def parse_args(argv):
     )
 
 
-def main(*, argv=None):
+def main(*, argv: t.Iterable[str] | None = None) -> int:
     args = parse_args(argv)
 
     separator_regex = codepoints2regex(args.separator_codepoints)
