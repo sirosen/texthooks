@@ -7,6 +7,7 @@ This checker only examines the BiDi controls, no other format control characters
 other sources
 """
 import sys
+import typing as t
 
 from ._common import all_filenames, codepoint2char, parse_cli_args
 from ._recorders import CheckRecorder
@@ -35,7 +36,7 @@ def check_bidi_str(line: str) -> bool:
     return True
 
 
-def do_all_checks(files, verbosity) -> CheckRecorder:
+def do_all_checks(files: t.Iterable[str] | None, verbosity: int) -> CheckRecorder:
     recorder = CheckRecorder(verbosity)
 
     for fn in all_filenames(files):
@@ -43,11 +44,11 @@ def do_all_checks(files, verbosity) -> CheckRecorder:
     return recorder
 
 
-def parse_args(argv):
+def parse_args(argv: t.Iterable[str] | None) -> t.Any:
     return parse_cli_args(__doc__, fixer=False, argv=argv)
 
 
-def main(*, argv=None) -> int:
+def main(*, argv: t.Iterable[str] | None = None) -> int:
     args = parse_args(argv)
     findings = do_all_checks(all_filenames(args.files), args.verbosity)
     if findings:
