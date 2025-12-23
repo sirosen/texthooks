@@ -1,8 +1,7 @@
-# black-compatible flake8 config
 [flake8]
-exclude = .git,__pycache__,.eggs,venv,.venv
-max-line-length = 88
+exclude = .git,__pycache__,.venv,.tox
 
-# ref: https://github.com/ambv/black/blob/master/.flake8
-# W503/W504 conflict, black causes E203
-ignore = W503,W504,E203,
+# black-compatible flake8 config
+max-line-length = 80
+extend-select = B950
+extend-ignore = E203,E501,E701
