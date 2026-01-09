@@ -13,7 +13,7 @@ For example, if you want a macro of the form
 in markdown, then specify
 
    --macro 'issue:' '[texthooks#$VALUE](https://github.com/sirosen/texthooks/issues/$VALUE)'
-"""  # noqa: E501
+"""  # noqa: B950
 
 import argparse
 import re
