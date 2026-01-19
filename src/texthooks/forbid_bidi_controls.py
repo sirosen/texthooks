@@ -6,6 +6,7 @@ characters (BiDi characters).
 This checker only examines the BiDi controls, no other format control characters or
 other sources
 """
+
 import sys
 import typing as t
 

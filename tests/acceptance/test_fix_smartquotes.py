@@ -18,11 +18,9 @@ def test_fix_smartquotes_simple_double_quote(runner):
         """,
     )
     assert result.exit_code == 1
-    assert result.file_data == d(
-        """
+    assert result.file_data == d("""
         "some data"
-        """
-    )
+        """)
 
 
 def test_fix_smartquotes_fullwidth_apostrophe(runner):
@@ -33,11 +31,9 @@ def test_fix_smartquotes_fullwidth_apostrophe(runner):
         """,
     )
     assert result.exit_code == 1
-    assert result.file_data == d(
-        """
+    assert result.file_data == d("""
         don't write like this
-        """
-    )
+        """)
 
 
 def test_fix_smartquotes_showchanges(runner):
@@ -49,13 +45,10 @@ def test_fix_smartquotes_showchanges(runner):
         add_args=["--show-changes"],
     )
     assert result.exit_code == 1
-    assert result.file_data == d(
-        """
+    assert result.file_data == d("""
         don't write like this
-        """
-    )
-    assert strip_ansi(result.stdout) == d(
-        f"""\
+        """)
+    assert strip_ansi(result.stdout) == d(f"""\
         Changes were made in these files:
           {result.filename}
           line 2:
@@ -63,8 +56,7 @@ def test_fix_smartquotes_showchanges(runner):
                  ^
             + don't write like this
                  ^
-        """
-    )
+        """)
 
 
 # issue #40 indicates a bug in the way that the fixer behaves on certain
@@ -77,11 +69,9 @@ def test_fix_smartquotes_issue40(runner):
         """,
     )
     assert result.exit_code == 1
-    assert result.file_data == d(
-        """\
+    assert result.file_data == d("""\
         "foo–bar"
-        """
-    )
+        """)
 
 
 def test_fix_smartquotes_can_have_a_rule_disabled(runner):

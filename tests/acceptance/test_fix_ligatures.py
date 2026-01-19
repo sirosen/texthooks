@@ -24,11 +24,9 @@ def test_fix_ligature_fi_stylistic_ligature(runner):
         """,
     )
     assert result.exit_code == 1
-    assert result.file_data == d(
-        """
+    assert result.file_data == d("""
         config
-        """
-    )
+        """)
     assert "checking file.txt..." not in result.stdout
 
 
@@ -48,13 +46,10 @@ def test_fix_ligature_showchanges_nocolor(runner):
         add_args=["--show-changes", "--color=off"],
     )
     assert result.exit_code == 1
-    assert result.file_data == d(
-        """
+    assert result.file_data == d("""
         config config
-        """
-    )
-    assert result.stdout == d(
-        f"""\
+        """)
+    assert result.stdout == d(f"""\
         Changes were made in these files:
           {result.filename}
           line 2:
@@ -62,5 +57,4 @@ def test_fix_ligature_showchanges_nocolor(runner):
                  ^     ^
             + config config
                  ^^     ^^
-        """
-    )
+        """)

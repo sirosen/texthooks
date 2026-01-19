@@ -17,13 +17,11 @@ def test_forbid_bidi_controls_positive(runner):
         """,
     )
     assert result.exit_code == 1
-    assert strip_ansi(result.stdout) == d(
-        f"""\
+    assert strip_ansi(result.stdout) == d(f"""\
         These files failed the forbid-bidi-controls check:
           {result.filename}
           lineno: 2
-        """
-    )
+        """)
 
 
 def test_forbid_bidi_controls_multiline(runner):
@@ -35,10 +33,8 @@ def test_forbid_bidi_controls_multiline(runner):
         """,
     )
     assert result.exit_code == 1
-    assert strip_ansi(result.stdout) == d(
-        f"""\
+    assert strip_ansi(result.stdout) == d(f"""\
         These files failed the forbid-bidi-controls check:
           {result.filename}
           line numbers: 2,3
-        """
-    )
+        """)

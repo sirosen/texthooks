@@ -83,8 +83,7 @@ def test_gitlab_alphabetize_codeowners_alphabetizes_default_owners(runner):
         add_args=["--dialect", "gitlab"],
     )
     assert result.exit_code == 1
-    assert result.file_data == d(
-        """\
+    assert result.file_data == d("""\
         # section
         [D A C B]
         # optional section
@@ -92,8 +91,7 @@ def test_gitlab_alphabetize_codeowners_alphabetizes_default_owners(runner):
         # section with owners
         [D A C B] @alice @mallory
         /foo/bar.txt
-        /foo/baz.txt"""
-    )
+        /foo/baz.txt""")
 
 
 def test_gitlab_alphabetize_codeowners_alphabetizes_default_owners_with_min_reviewers(
@@ -108,12 +106,10 @@ def test_gitlab_alphabetize_codeowners_alphabetizes_default_owners_with_min_revi
         add_args=["--dialect", "gitlab"],
     )
     assert result.exit_code == 1
-    assert result.file_data == d(
-        """\
+    assert result.file_data == d("""\
         [D A C B][2] @alice @bob @mallory
         /foo/bar.txt
-        /foo/baz.txt"""
-    )
+        /foo/baz.txt""")
 
 
 @pytest.mark.parametrize("dialect", ("standard", "gitlab"))
@@ -126,11 +122,9 @@ def test_alphabetize_codeowners_accepts_inline_comments(runner, dialect):
         add_args=["--dialect", dialect],
     )
     assert result.exit_code == 1
-    assert result.file_data == d(
-        """\
+    assert result.file_data == d("""\
         # some non-alphabetized strings will follow
-        /foo/bar.txt @alice @charlie  # d b a c"""
-    )
+        /foo/bar.txt @alice @charlie  # d b a c""")
 
 
 # a regression test for https://github.com/sirosen/texthooks/issues/111
@@ -143,14 +137,12 @@ def test_space_removal_will_align_in_show_changes_output(runner):
         add_args=["--show-changes", "--color=off"],
     )
     assert result.exit_code == 1
-    assert result.stdout == d(
-        f"""\
+    assert result.stdout == d(f"""\
         Changes were made in these files:
           {result.filename}
           line 1:
             - /foo/bar.txt    @alice      @bob
                            ---       -----
             + /foo/bar.txt @alice @bob
-        """
-    )
+        """)
     assert result.file_data == "/foo/bar.txt @alice @bob\n"

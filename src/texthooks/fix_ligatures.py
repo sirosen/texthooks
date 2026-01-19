@@ -9,6 +9,7 @@ the fixers is intended to fix text which has been ligature-ized for
 presentation (e.g. by LaTeX) but was originally input as ASCII-friendly latin
 text.
 """
+
 import re
 import sys
 import typing as t
