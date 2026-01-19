@@ -12,6 +12,7 @@ mark (U+30FC), are ignored.
 In files with the offending characters, they are replaced and the run is
 marked as failed. This makes the script suitable as a pre-commit fixer.
 """
+
 import argparse
 import re
 import sys
