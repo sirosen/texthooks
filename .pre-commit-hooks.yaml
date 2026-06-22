@@ -1,3 +1,9 @@
+- id: fix-arrows
+  name: Fix Unicode arrow characters
+  description: 'Replace Unicode arrow characters (->, <-, =>, etc.) with ASCII equivalents'
+  entry: fix-arrows
+  language: python
+  types: [text]
 - id: fix-smartquotes
   name: Fix smartquote characters
   description: 'Replace "smartquote" characters with regular quotes'

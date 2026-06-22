@@ -38,6 +38,7 @@ fix-smartquotes FILENAME
 | **Hook**                 | **Description**                                  |
 | ------------------------ | ------------------------------------------------ |
 | `alphabetize-codeowners` | Alphabetize names in CODEOWNERS files.           |
+| `fix-arrows`             | Replace Unicode arrows with ASCII equivalents.   |
 | `fix-smartquotes`        | Replace curly quotes with ASCII quotes.          |
 | `fix-spaces`             | Normalize special space markers to ASCII spaces. |
 | `fix-unicode-dashes`     | Normalize various dash characters to ASCII.      |
@@ -134,6 +135,16 @@ You could override the space codepoints as follows:
       args: ["--separator-codepoints", "2009"]
 ```
 
+### `fix-arrows`
+
+Replace various unicode arrow characters with their ASCII equivalents.
+
+For example, the rightwards arrow (`→`) becomes `->`, the leftwards double
+arrow (`⇐`) becomes `<=`, and the long left-right arrow (`⟷`) becomes `<-->`.
+
+Only arrows which have an unambiguous ASCII representation are converted.
+Vertical and diagonal arrows (e.g. `↑`, `↓`, `↗`) are left untouched.
+
 ### `fix-unicode-dashes`
 
 Replace various unicode dash characters with `"-"` and `"--"`.
@@ -222,6 +233,8 @@ following sample config:
 - Remove support for Python 3.8 and 3.9
 - Add a `--check` flag to all fixers, which checks for changes but does not
   apply them.
+- Add `fix-arrows` fixer, which replaces Unicode arrow characters with ASCII
+  equivalents.
 
 ### 0.7.1
 

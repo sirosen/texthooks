@@ -33,6 +33,7 @@ source = "https://github.com/sirosen/texthooks"
 
 [project.scripts]
 alphabetize-codeowners = "texthooks.alphabetize_codeowners:main"
+fix-arrows = "texthooks.fix_arrows:main"
 fix-smartquotes = "texthooks.fix_smartquotes:main"
 fix-spaces = "texthooks.fix_spaces:main"
 fix-ligatures = "texthooks.fix_ligatures:main"
