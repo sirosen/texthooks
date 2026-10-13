@@ -45,7 +45,7 @@ macro-expand = "texthooks.macro_expand:main"
 [dependency-groups]
 coverage = ["coverage[toml]"]
 test = [
-    "pytest<10",
+    "pytest<11",
     "pytest-xdist<4",
     { include-group = "coverage" },
 ]
