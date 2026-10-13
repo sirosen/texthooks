@@ -44,7 +44,7 @@ jobs:
           with:
             python-version: ${{ matrix.py }}
         - uses: astral-sh/setup-uv@c18668ad3cf93ea998bef934396af7bb5c839dc7 # v10.2.0
-      - run: uv tool install tox tox-uv
+      - run: uv tool install tox --with tox-uv
       - name: cache tox virtualenvs
         uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
