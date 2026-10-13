@@ -1,12 +1,12 @@
+set lazy
+
 version := `uvx mddj read version`
 default_py_minor_version := `python -c 'import sys;print(sys.version_info[1],end="")'`
 git_remote_name := `git rev-parse --abbrev-ref @{push} | cut -d '/' -f1`
 
 # show help
 default:
-    just --list
-    @echo
-    just --evaluate
+    @just --list
 
 # setup a project-level virtualenv + pre-commit hooks
 install:
@@ -18,13 +18,10 @@ install:
 run command *FLAGS:
     .venv/bin/{{command}} {{FLAGS}}
 
-# run lint tools
+# run linters tools
 lint:
-    pre-commit run --skip black --skip isort --skip slyp --skip pyupgrade
+    prek run -a
     tox r -e mypy
-# run autofixers and formatters
-format:
-    pre-commit run black isort slyp pyupgrade
 
 # run primary testsuite via tox
 test *FLAGS:
