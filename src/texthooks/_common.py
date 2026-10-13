@@ -35,11 +35,11 @@ def codepoint2char(codepoint: str) -> str:
     return chr(int(codepoint, 16))
 
 
-def codepoints2chars(codepoints: t.Sequence[str]) -> t.List[str]:
+def codepoints2chars(codepoints: t.Sequence[str]) -> list[str]:
     return [chr(int(c, 16)) for c in codepoints]
 
 
-def all_filenames(files: t.Optional[t.Iterable[str]]) -> t.Iterator[str]:
+def all_filenames(files: t.Iterable[str] | None) -> t.Iterator[str]:
     if not files:
         for fn in glob.iglob("**/*", recursive=True):
             tags = identify.tags_from_path(fn)
