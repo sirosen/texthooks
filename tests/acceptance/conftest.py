@@ -52,7 +52,7 @@ def runner(tmp_path, capsys):
         fixer_main: t.Callable,
         data: str,
         *,
-        add_args: t.Optional[t.List[str]] = None,
+        add_args: list[str] | None = None,
         filename: str = "file.txt",
         encoding: str = "utf-8",
         dedent: bool = True,
