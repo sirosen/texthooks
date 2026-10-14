@@ -12,7 +12,7 @@ To use with `pre-commit`, include this repo and the desired hooks in
 
 ```yaml
 - repo: https://github.com/sirosen/texthooks
-  rev: 0.7.1
+  rev: 1.0.0
   hooks:
     - id: alphabetize-codeowners
     - id: fix-smartquotes
@@ -99,7 +99,7 @@ as follows:
 
 ```yaml
 - repo: https://github.com/sirosen/texthooks
-  rev: 0.7.1
+  rev: 1.0.0
   hooks:
     - id: fix-smartquotes
       # replace default single quote chars with this set:
@@ -128,7 +128,7 @@ You could override the space codepoints as follows:
 
 ```yaml
 - repo: https://github.com/sirosen/texthooks
-  rev: 0.7.1
+  rev: 1.0.0
   hooks:
     - id: fix-spaces
       args: ["--separator-codepoints", "2009"]
@@ -165,7 +165,7 @@ You could could override the double-hyphen codepoints as follows:
 
 ```yaml
 - repo: https://github.com/sirosen/texthooks
-  rev: 0.7.1
+  rev: 1.0.0
   hooks:
     - id: fix-spaces
       args: ["--double-hyphen-codepoints", "2014", "--single-hyphen-codepoints", ""]
@@ -203,7 +203,7 @@ following sample config:
 
 ```yaml
 - repo: https://github.com/sirosen/texthooks
-  rev: 0.7.1
+  rev: 1.0.0
   hooks:
     - id: macro-expand
       args:
@@ -218,10 +218,13 @@ following sample config:
 
 <!-- bumpversion-changelog -->
 
+### 1.0.0
+
 - Support Python 3.14 and 3.15
 - Remove support for Python 3.8 and 3.9
 - Add a `--check` flag to all fixers, which checks for changes but does not
   apply them.
+- Fixer implementations have been refined to share a common core.
 
 ### 0.7.1
 
